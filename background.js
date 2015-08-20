@@ -28,12 +28,13 @@ function init() {
 var trackInfo = new ti();
 var isPlaying = true;
 var timeout = null;
-
+var nt = null;
+var checks = 0;
 function checkForSongChange() {
   var newTi = new ti($(".playerBarSong")[0].text,
-    $(".playerBarArtist")[0].text,
-    $(".playerBarAlbum")[0].text,
-    $(".playerBarArt")[0].src);
+                     $(".playerBarArtist")[0].text,
+                     $(".playerBarAlbum")[0].text,
+                     $(".playerBarArt")[0].src);
 
   var time = $(".elapsedTime")[0].textContent.split(":");
   var elapsed = parseInt(time[0]) * 60 + parseInt(time[1]);
@@ -42,33 +43,18 @@ function checkForSongChange() {
   //http://www.pandora.com/img/no_album_art.png
   if (!trackInfo.equals(newTi) &&
     (trackInfo.image != newTi.image ||
-      (trackInfo.image == "http://www.pandora.com/img/no_album_art.png" && elapsed > 3))) {
+      (trackInfo.image == "http://www.pandora.com/img/no_album_art.png" && checks++ > 4))) {
     trackInfo = newTi;
+
+    //Station Name:
+    //$(".shuffleStationLabelCurrent").find(".stationNameText").text().trim()
 
     var track = trackInfo.name;
     var artist = trackInfo.artist;
     var album = trackInfo.album;
     var image = trackInfo.image;
 
-    window.title = track + " by " + artist;
-
-    // var options = {
-    //   iconUrl: image,
-    //   title: track,
-    //   message: 'by ' + artist,
-    //   contextMessage: ' on ' + album,
-    //   buttons: [
-    //     {
-    //       tite: "Skip",
-    //       iconUrl: "http://www.pandora.com/img/player-controls/btn_skip.png"
-    //     },
-    //     {
-    //       tite: "Like",
-    //       iconUrl: "http://www.pandora.com/img/player-controls/btn_up.png"
-    //     }
-    //   ],
-    //   isClickable: true
-    // };
+    window.document.title = track + " by " + artist;
 
     var options = {
       icon: image,
@@ -76,16 +62,12 @@ function checkForSongChange() {
       sticky: true
     };
 
-    var nt = new Notification(track, options);
+    if (nt){
+      nt.close();
+      nt = null;
+    }
 
-
-
-    //var nt2 = chrome.notifications.create("PandoraApp", options, function () {});
-
-    // nt2.onClicked = function () { nt2.close();};
-    // setTimeout(function(){
-    //     nt2.close();
-    // },120000);
+    nt = new Notification(track, options);
 
     var noteClicked = function() {
       if ($($(".pauseButton")[0]).is(":visible")) {

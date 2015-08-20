@@ -1,6 +1,6 @@
 {
   "name": "Pandora Notifier",
-  "version": "1.2.42",
+  "version": "1.2.44",
   "description": "Shows off desktop notifications when Pandora song changes",
   "icons": {
     "48": "pandora.png"
