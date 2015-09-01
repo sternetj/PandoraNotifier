@@ -1,12 +1,12 @@
 {
   "name": "Pandora Notifier",
-  "version": "1.2.44",
+  "version": "1.2.48",
   "description": "Shows off desktop notifications when Pandora song changes",
   "icons": {
-    "48": "pandora.png"
+    "48": "pandora2.png"
   },
   "permissions": [
-    "notifications", "activeTab", "*://*.pandora.com/*"
+    "notifications", "activeTab", "*://*.pandora.com/*", "tabs"
   ],
   "options_page": "options.html",
   "manifest_version": 2,
@@ -14,10 +14,14 @@
 
   // crbug.com/134315
   "web_accessible_resources": [
-    "pandora.png"
+    "pandora2.png", "popout.html"
   ],
   "content_scripts": [{
     "matches": ["*://*.pandora.com/*"],
     "js": ["jquery.min.js", "background.js"]
-  }]
+  }],
+  "background": {
+    "scripts": ["jquery.min.js", "player.js"],
+    "persistent": false
+  }  
 }

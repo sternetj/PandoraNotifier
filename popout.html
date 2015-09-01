@@ -1,0 +1,126 @@
+<html>
+	<head>
+		<title>&nbsp;</title>
+		<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+		<style>
+		body {
+			color: #eee;
+			background-color: #202638;
+			font-family: "arial",Helvetica Neue,helvetica,sans-serif;
+			-webkit-background-size: cover;
+		    -moz-background-size: cover;
+		    -o-background-size: cover;
+		    background-size: cover;
+		}
+		#playbackControl {
+			background-color: #465c7d;
+			position: absolute;
+			bottom: 6;
+			display: block;
+			padding-top: 2px;
+			vertical-align: top;
+			text-align: center;
+		}
+		#playbackControl> a {
+			display: block;
+			height: 48px;
+			width:  48px;
+		}
+		#track {
+			font-size: 1.5em;
+		}
+		#songInfo span {
+			display: block;
+		}
+		a { 
+			color: inherit; 
+			text-decoration: none;
+		} 
+		#songInfo a:hover {
+    		text-decoration: underline;
+		}
+		#playButton, #pauseButton, #skipButton {
+			margin: 6px 19px 0 3px;
+			float: left;
+		}
+		#skipButton {
+			margin: 6px 3px 0 23px;
+		}
+		#playButton > a {
+			background: url('images/btn_play.png') no-repeat top left;
+			width: 48px;
+			height: 47px;
+		}
+		#pauseButton > a {
+			background: url('images/btn_pause.png') no-repeat top left;
+			width: 48px;
+			height: 47px;
+		}
+		#skipButton > a {
+			background: url('images/btn_skip.png') no-repeat top left;
+			width: 36px;
+			height: 38px;
+		}
+		#buttons {
+			margin: 0 auto;
+			text-align: center;
+			height: 43px;
+			width: 240px;
+		}
+		#progressBar {
+			width: 180px;
+			height: 4px;
+			overflow: hidden;
+			background-color: #0f304f;
+			text-align: left;
+			vertical-align: middle;
+			border-radius: 2px;
+		}
+		#progress {
+			width: 260px;
+			clear: both;
+			margin-left: auto;
+			margin-right: auto;
+		}
+		.time {
+			position: relative;
+			width: 35px;
+			vertical-align: top;
+			margin-top: -6px;
+			font-size: 12px;
+			color: #d1dbea;
+		}
+		#remainingTime {
+			float: right;
+			text-align: left;
+			padding-left: 3px;
+		}
+		#elapsedTime {
+			float: left;
+			padding-right: 3px;
+			text-align: right;
+		}
+		</style>
+	</head>
+	<body>
+		<div id="songInfo">
+			<span><a id="track" href="#">Need You Now</a></span>
+			<span>by <a id="artist" href="#">Lady Antebellum</a></span>
+			<span>on <a id="album">Need You Now</a></span>
+		</div>
+		<div id="playbackControl" style="display: block;">
+			<div id="buttons">
+				<!-- 					<div class="thumbDownButton"><a href="#"></a></div>
+				<div class="thumbUpButton"><a href="#"></a></div> -->
+				<div id="playButton" style="display: block;"><a href="#"></a></div>
+				<div id="pauseButton" style="display: none;"><a href="#"></a></div>
+				<div id="skipButton"><a href="#"></a></div>
+			</div>
+			<div id="progress">
+				<div id="remainingTime" class="time">-3:27</div>
+				<div id="elapsedTime" class="time">0:15</div>
+				<div id="progressBar"><img class="progressMiddle" src="images/progress-middle.png" width="23" height="4" ></div>
+			</div>
+		</div>
+	</body>
+</html>

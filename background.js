@@ -30,6 +30,7 @@ var isPlaying = true;
 var timeout = null;
 var nt = null;
 var checks = 0;
+var timeOut = null;
 function checkForSongChange() {
   var newTi = new ti($(".playerBarSong")[0].text,
                      $(".playerBarArtist")[0].text,
@@ -48,6 +49,12 @@ function checkForSongChange() {
 
     //Station Name:
     //$(".shuffleStationLabelCurrent").find(".stationNameText").text().trim()
+
+    trackInfo.action = 'notify';
+    chrome.runtime.sendMessage(trackInfo,
+        function(createdWindow) {
+          console.log("notified!");
+        });
 
     var track = trackInfo.name;
     var artist = trackInfo.artist;
@@ -72,6 +79,8 @@ function checkForSongChange() {
     var noteClicked = function() {
       if ($($(".pauseButton")[0]).is(":visible")) {
         $(".pauseButton").click();
+        clearTimeout(timeOut);
+        timeOut = null;
         nt = new Notification("Paused - " + track, options);
         nt.onclick = noteClicked;
       } else {
@@ -79,7 +88,7 @@ function checkForSongChange() {
         $(".playButton").click();
         nt = new Notification(track, options);
         nt.onclick = noteClicked;
-        timeout = setTimeout(function() {
+        timeOut = setTimeout(function() {
           nt.close();
         }, (toGo) * 1000);
       }
@@ -88,7 +97,7 @@ function checkForSongChange() {
 
     nt.onclick = noteClicked;
 
-    setTimeout(function() {
+    timeOut = setTimeout(function() {
       nt.close();
     }, (toGo) * 1000);
 
