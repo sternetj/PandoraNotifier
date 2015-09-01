@@ -51,6 +51,12 @@ function checkForSongChange() {
     //$(".shuffleStationLabelCurrent").find(".stationNameText").text().trim()
 
     trackInfo.action = 'notify';
+    trackInfo.isPlaying = $($(".pauseButton")[0]).is(":visible");
+    trackInfo.playButton = $(".playButton");
+    trackInfo.pauseButton = $(".pauseButton");
+    trackInfo.skipButton = $(".skipButton");
+    trackInfo.elapsed = $(".elapsedTime")[0].textContent;
+    trackInfo.remaining = $(".remainingTime")[0].textContent;
     chrome.runtime.sendMessage(trackInfo,
         function(createdWindow) {
           console.log("notified!");
@@ -74,7 +80,7 @@ function checkForSongChange() {
       nt = null;
     }
 
-    nt = new Notification(track, options);
+    //nt = new Notification(track, options);
 
     var noteClicked = function() {
       if ($($(".pauseButton")[0]).is(":visible")) {
@@ -95,11 +101,11 @@ function checkForSongChange() {
       return false;
     }
 
-    nt.onclick = noteClicked;
+    //nt.onclick = noteClicked;
 
-    timeOut = setTimeout(function() {
-      nt.close();
-    }, (toGo) * 1000);
+    // timeOut = setTimeout(function() {
+    //   nt.close();
+    // }, (toGo) * 1000);
 
     console.log("Next Song is: " + trackInfo.name);
   }

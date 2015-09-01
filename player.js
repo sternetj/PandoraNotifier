@@ -22,16 +22,39 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         //     isClickable: true,
         //     priority: 2,
         // };
+        var sendMe = function () {
+            sendResponse("test");
+        }
+
         var updatePlayer = function() {
             var views = chrome.extension.getViews();
             if (views.length > 1) {
                 var doc = views[views.length - 1].document;
-                doc.title = "";
+                //doc.title = " ";
                 var body = doc.body;
                 body.style.backgroundImage = "url('" + request.image + "')";
                 doc.getElementById("track").innerHTML = request.name;
                 doc.getElementById("artist").innerHTML = request.artist;
                 doc.getElementById("album").innerHTML = request.album;
+                doc.getElementById("remainingTime").innerHTML = request.remaining;
+                doc.getElementById("elapsedTime").innerHTML = request.elapsed;
+                doc.getElementById("playButton").onclick = function() {
+                    request.playButton.onclick.apply(request.playButton);
+                };
+                doc.getElementById("pauseButton").onclick = function() {
+                    request.pauseButton.onclick.apply(request.pauseButton);
+                };
+                doc.getElementById("skipButton").onclick = function() {
+                    request.skipButton.onclick.apply(request.skipButton);
+                };
+
+                if (request.isPlaying) {
+                    doc.getElementById("playButton").classList.add("hidden");
+                    doc.getElementById("pauseButton").classList.remove("hidden");
+                } else {
+                    doc.getElementById("pauseButton").classList.add("hidden");
+                    doc.getElementById("playButton").classList.remove("hidden");
+                }
             }
         }
         var w = 300;
@@ -47,7 +70,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 top: top,
                 left: left
             }, function(win) {
-                updatePlayer();
+                timeOut = setTimeout(function() {
+                  updatePlayer();
+                }, 250);                
             });
         } else {
             updatePlayer();
