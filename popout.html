@@ -7,7 +7,7 @@
 						color: #eee;
 			font-family: "arial",Helvetica Neue,helvetica,sans-serif;
 			margin: 0;
-			
+			overflow: hidden;
 		}
 		#body {
 			background-color: #202638;
@@ -16,6 +16,9 @@
 		-moz-background-size: cover;
 		-o-background-size: cover;
 		background-size: cover;
+		}
+		a {
+			cursor: pointer;
 		}
 		#playbackControl {
 			background-color: #465c7d;
@@ -37,12 +40,12 @@
 			font-size: 1.5em;
 		}
 		#songInfo {
-		background: -moz-linear-gradient(top,  rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.2) 61%, rgba(0,0,0,0) 100%);
-		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.3)), color-stop(61%,rgba(0,0,0,0.2)), color-stop(100%,rgba(0,0,0,0)));
-		background: -webkit-linear-gradient(top,  rgba(0,0,0,0.3) 0%,rgba(0,0,0,0.2) 61%,rgba(0,0,0,0) 100%);
-		background: -o-linear-gradient(top,  rgba(0,0,0,0.3) 0%,rgba(0,0,0,0.2) 61%,rgba(0,0,0,0) 100%);
-		background: -ms-linear-gradient(top,  rgba(0,0,0,0.3) 0%,rgba(0,0,0,0.2) 61%,rgba(0,0,0,0) 100%);
-		background: linear-gradient(to bottom,  rgba(0,0,0,0.3) 0%,rgba(0,0,0,0.2) 61%,rgba(0,0,0,0) 100%);
+		background: -moz-linear-gradient(top,  rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.3) 65%, rgba(0,0,0,0) 100%);
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.45)), color-stop(65%,rgba(0,0,0,0.3)), color-stop(100%,rgba(0,0,0,0)));
+		background: -webkit-linear-gradient(top,  rgba(0,0,0,0.45) 0%,rgba(0,0,0,0.3) 65%,rgba(0,0,0,0) 100%);
+		background: -o-linear-gradient(top,  rgba(0,0,0,0.45) 0%,rgba(0,0,0,0.3) 65%,rgba(0,0,0,0) 100%);
+		background: -ms-linear-gradient(top,  rgba(0,0,0,0.45) 0%,rgba(0,0,0,0.3) 65%,rgba(0,0,0,0) 100%);
+		background: linear-gradient(to bottom,  rgba(0,0,0,0.45) 0%,rgba(0,0,0,0.3) 65%,rgba(0,0,0,0) 100%);
 		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4d000000', endColorstr='#00000000',GradientType=0 );
 		position: absolute;
 		left:0;
@@ -61,30 +64,37 @@
 		#songInfo a:hover {
 		text-decoration: underline;
 		}
-		#playButton, #pauseButton, #skipButton, #thumbUpButton {
+		#playButton, #pauseButton, #skipButton, #likeButton, #dislikeButton {
 			margin: 6px 19px 0 3px;
 			float: left;
 		}
-		#skipButton {
-			margin: 6px 3px 0 23px;
-		}
 		#playButton > a {
-			background: url('images/btn_play.png') no-repeat top left;
-			width: 48px;
-			height: 47px;
+			background: url('images/btn_play.png') no-repeat center right;
+			width: 36px;
+			height: 38px;
 		}
 		#pauseButton > a {
-			background: url('images/btn_pause.png') no-repeat top left;
-			width: 48px;
-			height: 47px;
+			background: url('images/btn_pause.png') no-repeat center right;
+			width: 36px;
+			height: 38px;
 		}
 		#skipButton > a {
 			background: url('images/btn_skip.png') no-repeat top left;
 			width: 36px;
 			height: 38px;
 		}
-		#thumbUpButton > a {
+		#likeButton > a {
 			background: url('images/btn_up.png') no-repeat top left;
+			width: 36px;
+			height: 38px;
+		}
+		#likeButton.liked > a {
+			background: url('images/btn_up_indicator.png') no-repeat top left;
+			width: 36px;
+			height: 38px;
+		}
+		#dislikeButton > a {
+			background: url('images/btn_down.png') no-repeat top left;
 			width: 36px;
 			height: 38px;
 		}
@@ -131,29 +141,81 @@
 		.hidden {
 			display: none;
 		}
+		#playbackControl {
+			transition: all 0.75s ease;
+			transform: translateY(65px);
+			opacity: 0;
+		}
+		#playbackControl.show {
+			transform: translateY(0px);
+			opacity: 1;
+		}
+		#buttons {
+			margin-bottom: 4px;
+		}
+		#albumImage {
+			opacity: 0;
+			position: absolute;
+			object-fit: cover;
+			width: 100vw;
+			
+		}
+		#albumImage.animate {
+			animation: star 1.5s forwards;
+		}
+		@keyframes star {
+		0% {
+		opacity: 1;
+		-webkit-clip-path: circle(0px at center);
+		}
+		100% {
+		opacity: 1;
+		-webkit-clip-path: circle(100% at center);
+		}
+		}
 		</style>
 	</head>
 	<body id="body">
+		<img id="albumImage" src=""></img>
+		<!-- <input type="button" value="switch" id="switchMe"></input> -->
 		<div id="songInfo">
-			<span><a id="track" href="#">Title</a></span>
-			<span>by <a id="artist" href="#">Artist</a></span>
+			<span><a id="track">Title</a></span>
+			<span>by <a id="artist">Artist</a></span>
 			<span>on <a id="album">Album</a></span>
 		</div>
 		<div id="playbackControl" style="display: block;">
 			<div id="buttons">
-				<!-- 					<div class="thumbDownButton"><a href="#"></a></div> -->
-				<div id="thumbUpButton"><a></a></div>
+				<div id="dislikeButton"><a></a></div>
+				<div id="likeButton"><a></a></div>
 				<div id="playButton"><a></a></div>
 				<div id="pauseButton" class="hidden"><a></a></div>
 				<div id="skipButton"><a></a></div>
 			</div>
 			<div id="progress">
-				<div id="remainingTime" class="time">-3:27</div>
-				<div id="elapsedTime" class="time">0:15</div>
-				<div id="progressBar"><img id="progressMiddle" src="images/progress-middle.png" width="23" height="4" ></div>
+				<div id="remainingTime" class="time">-0:00</div>
+				<div id="elapsedTime" class="time">0:00</div>
+				<div id="progressBar"><img id="progressMiddle" src="images/progress-middle.png" width="0" height="4" ></div>
 			</div>
 		</div>
 		<script type="text/javascript" src="jquery.min.js"></script>
 		<script type="text/javascript" src="popout.js"></script>
+		<!-- <script type="text/javascript">
+			// 	document.body.style.backgroundImage = "url('pandora.png')";
+			// 	$( document ).ready( function () {
+				// 		$("#switchMe").click(function () {
+					// 			$("#albumImage").attr('src', "images/btn_up_indicator.png" );
+					// 			// $("#albumImage").addClass("animate").delay(1500).queue(function(){
+					// 			//     $(this).removeClass("animate").dequeue();
+					// 			//     document.body.style.backgroundImage = "url('" + $("#albumImage")[0].src + "')";
+					// 			// });
+				// 		});
+				// 		$("#albumImage").load(function() {
+					// 			$("#albumImage").addClass("animate").delay(1500).queue(function(){
+					// 			    $(this).removeClass("animate").dequeue();
+					// 			    document.body.style.backgroundImage = "url('" + $("#albumImage")[0].src + "')";
+					// 			});
+				// 		});
+			// 	});
+		// </script> -->
 	</body>
 </html>

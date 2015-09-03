@@ -43,6 +43,7 @@ function checkForSongChange() {
   var toGo = parseInt(time2[0]) * -60 + parseInt(time2[1]);
   //http://www.pandora.com/img/no_album_art.png
   if (!trackInfo.equals(newTi) &&
+    toGo > 0 &&
     (trackInfo.image != newTi.image ||
       (trackInfo.image == "http://www.pandora.com/img/no_album_art.png" && checks++ > 4))) {
     trackInfo = newTi;
@@ -52,14 +53,12 @@ function checkForSongChange() {
 
     trackInfo.action = 'notify';
     trackInfo.isPlaying = $($(".pauseButton")[0]).is(":visible");
-    trackInfo.playButton = $(".playButton");
-    trackInfo.pauseButton = $(".pauseButton");
-    trackInfo.skipButton = $(".skipButton");
+    trackInfo.songIsLiked = $($(".thumbUpButton")[0]).hasClass("indicator");
     trackInfo.elapsed = $(".elapsedTime")[0].textContent;
     trackInfo.remaining = $(".remainingTime")[0].textContent;
     chrome.runtime.sendMessage(trackInfo,
-        function(createdWindow) {
-          console.log("notified!");
+        function() {
+          $(".pauseButton").click();
         });
 
     var track = trackInfo.name;
@@ -127,4 +126,34 @@ function waitTilLoaded() {
 $(window).bind("load", function() {
   console.log("Page Loaded!");
   waitTilLoaded();
+});
+
+chrome.runtime.onMessage.addListener(function(action, _, sendResponse) {
+  if (action === "pause"){
+    $(".pauseButton").click();
+    sendResponse("ok");
+  }else if (action === "play"){
+    $(".playButton").click();
+    sendResponse("ok");
+  }else if (action === "like"){
+    $(".thumbUpButton").click();
+    sendResponse("ok");
+  }else if (action === "dislike"){
+    $(".thumbDownButton").click();
+    sendResponse("ok");
+  }else if (action === "skip"){
+    $(".skipButton").click();
+    sendResponse("ok");
+  }else if (action === "seeSong"){
+    $(".songTitle").click();
+    sendResponse("ok");
+  }else if (action === "seeArtist"){
+    $(".artistSummary").click();
+    sendResponse("ok");
+  }else if (action === "seeAlbum"){
+    $(".albumTitle").click();
+    sendResponse("ok");
+  }else {
+    sendResponse("error: no action - " + action);
+  }
 });

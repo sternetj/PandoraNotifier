@@ -1,7 +1,11 @@
 var popupWin = null;
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function(request, sender, pauseFunc) {
     console.log(request);
-    if (request && request.action === 'notify') {
+    console.log(sender);
+    if (request && request.action === 'pause') {
+        console.log("pause me please");
+        request.pause();
+    } else if (request && request.action === 'notify') {
         // var details = {
         //     iconUrl: request.image,
         //     title: request.name,
@@ -22,9 +26,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         //     isClickable: true,
         //     priority: 2,
         // };
-        var sendMe = function () {
-            sendResponse("test");
-        }
 
         var updatePlayer = function() {
             var views = chrome.extension.getViews();
@@ -32,20 +33,81 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 var doc = views[views.length - 1].document;
                 //doc.title = " ";
                 var body = doc.body;
-                body.style.backgroundImage = "url('" + request.image + "')";
+                doc.getElementById("albumImage").src = request.image;
                 doc.getElementById("track").innerHTML = request.name;
                 doc.getElementById("artist").innerHTML = request.artist;
                 doc.getElementById("album").innerHTML = request.album;
                 doc.getElementById("remainingTime").innerHTML = request.remaining;
                 doc.getElementById("elapsedTime").innerHTML = request.elapsed;
+
+                var sendMessage = function(action, callback){
+                    chrome.tabs.query({}, function(tabs) {
+                        for (var tInd in tabs){
+                            chrome.tabs.sendMessage(tabs[tInd].id, action, callback);
+                        }                               
+                    });
+                }
+
                 doc.getElementById("playButton").onclick = function() {
-                    request.playButton.onclick.apply(request.playButton);
+                    sendMessage( "play", function (status) {
+                                if (status === "ok"){
+                                    console.log("success!");
+                                    doc.getElementById("playButton").classList.add("hidden");
+                                    doc.getElementById("pauseButton").classList.remove("hidden");
+                                }
+                            });
                 };
                 doc.getElementById("pauseButton").onclick = function() {
-                    request.pauseButton.onclick.apply(request.pauseButton);
+                    sendMessage("pause", function (status) {
+                                if (status === "ok"){
+                                    console.log("success!");
+                                    doc.getElementById("pauseButton").classList.add("hidden");
+                                    doc.getElementById("playButton").classList.remove("hidden");
+                                }
+                            });
                 };
                 doc.getElementById("skipButton").onclick = function() {
-                    request.skipButton.onclick.apply(request.skipButton);
+                    sendMessage("skip", function (status) {
+                                if (status === "ok"){
+                                    console.log("success!");
+                                }
+                            });
+                };
+                doc.getElementById("likeButton").onclick = function() {
+                    sendMessage("like", function (status) {
+                                if (status === "ok"){
+                                    doc.getElementById("likeButton").classList.toggle("liked");
+                                    console.log("success!");
+                                }
+                            });
+                };
+                doc.getElementById("dislikeButton").onclick = function() {
+                    sendMessage("dislike", function (status) {
+                                if (status === "ok"){
+                                    console.log("success!");
+                                }
+                            });
+                };
+                doc.getElementById("track").onclick = function() {
+                    sendMessage("seeSong", function (status) {
+                                if (status === "ok"){
+                                    console.log("success!");
+                                }
+                            });
+                };
+                doc.getElementById("artist").onclick = function() {
+                    sendMessage("seeArtist", function (status) {
+                                if (status === "ok"){
+                                    console.log("success!");
+                                }
+                            });
+                };
+                doc.getElementById("album").onclick = function() {
+                    sendMessage("seeAlbum", function (status) {
+                                if (status === "ok"){
+                                    console.log("success!");
+                                }
+                            });
                 };
 
                 if (request.isPlaying) {
@@ -54,6 +116,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 } else {
                     doc.getElementById("pauseButton").classList.add("hidden");
                     doc.getElementById("playButton").classList.remove("hidden");
+                }
+
+                if (request.songIsLiked){
+                    doc.getElementById("likeButton").classList.add("liked");
+                }else{
+                    doc.getElementById("likeButton").classList.remove("liked");
                 }
             }
         }
@@ -71,8 +139,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 left: left
             }, function(win) {
                 timeOut = setTimeout(function() {
-                  updatePlayer();
-                }, 250);                
+                    updatePlayer();
+                }, 10);
             });
         } else {
             updatePlayer();
