@@ -40,74 +40,82 @@ chrome.runtime.onMessage.addListener(function(request, sender, pauseFunc) {
                 doc.getElementById("remainingTime").innerHTML = request.remaining;
                 doc.getElementById("elapsedTime").innerHTML = request.elapsed;
 
-                var sendMessage = function(action, callback){
+                var sendMessage = function(action, callback) {
+                    var innerCallback = function(status) {
+                        callback(status)
+                    }
                     chrome.tabs.query({}, function(tabs) {
-                        for (var tInd in tabs){
-                            chrome.tabs.sendMessage(tabs[tInd].id, action, callback);
-                        }                               
+                        for (var tInd in tabs) {
+                            chrome.tabs.sendMessage(tabs[tInd].id, action, function(status) {
+                                callback(status, tabs[tInd]);
+                            });
+                        }
                     });
                 }
 
                 doc.getElementById("playButton").onclick = function() {
-                    sendMessage( "play", function (status) {
-                                if (status === "ok"){
-                                    console.log("success!");
-                                    doc.getElementById("playButton").classList.add("hidden");
-                                    doc.getElementById("pauseButton").classList.remove("hidden");
-                                }
-                            });
+                    sendMessage("play", function(status) {
+                        if (status === "ok") {
+                            console.log("success!");
+                            doc.getElementById("playButton").classList.add("hidden");
+                            doc.getElementById("pauseButton").classList.remove("hidden");
+                        }
+                    });
                 };
                 doc.getElementById("pauseButton").onclick = function() {
-                    sendMessage("pause", function (status) {
-                                if (status === "ok"){
-                                    console.log("success!");
-                                    doc.getElementById("pauseButton").classList.add("hidden");
-                                    doc.getElementById("playButton").classList.remove("hidden");
-                                }
-                            });
+                    sendMessage("pause", function(status) {
+                        if (status === "ok") {
+                            console.log("success!");
+                            doc.getElementById("pauseButton").classList.add("hidden");
+                            doc.getElementById("playButton").classList.remove("hidden");
+                        }
+                    });
                 };
                 doc.getElementById("skipButton").onclick = function() {
-                    sendMessage("skip", function (status) {
-                                if (status === "ok"){
-                                    console.log("success!");
-                                }
-                            });
+                    sendMessage("skip", function(status) {
+                        if (status === "ok") {
+                            console.log("success!");
+                        }
+                    });
                 };
                 doc.getElementById("likeButton").onclick = function() {
-                    sendMessage("like", function (status) {
-                                if (status === "ok"){
-                                    doc.getElementById("likeButton").classList.toggle("liked");
-                                    console.log("success!");
-                                }
-                            });
+                    sendMessage("like", function(status) {
+                        if (status === "ok") {
+                            doc.getElementById("likeButton").classList.toggle("liked");
+                            console.log("success!");
+                        }
+                    });
                 };
                 doc.getElementById("dislikeButton").onclick = function() {
-                    sendMessage("dislike", function (status) {
-                                if (status === "ok"){
-                                    console.log("success!");
-                                }
-                            });
+                    sendMessage("dislike", function(status) {
+                        if (status === "ok") {
+                            console.log("success!");
+                        }
+                    });
                 };
                 doc.getElementById("track").onclick = function() {
-                    sendMessage("seeSong", function (status) {
-                                if (status === "ok"){
-                                    console.log("success!");
-                                }
-                            });
+                    sendMessage("seeSong", function(status) {
+                        if (status === "ok") {
+                            console.log("success!");
+                        }
+                    });
                 };
                 doc.getElementById("artist").onclick = function() {
-                    sendMessage("seeArtist", function (status) {
-                                if (status === "ok"){
-                                    console.log("success!");
-                                }
-                            });
+                    sendMessage("seeArtist", function(status) {
+                        if (status === "ok") {
+                            console.log("success!");
+                        }
+                    });
                 };
                 doc.getElementById("album").onclick = function() {
-                    sendMessage("seeAlbum", function (status) {
-                                if (status === "ok"){
-                                    console.log("success!");
-                                }
+                    sendMessage("seeAlbum", function(status, tab) {
+                        if (status === "ok") {
+                            console.log("success!");
+                            chrome.tabs.update(tab.id, {
+                                highlighted: true
                             });
+                        }
+                    });
                 };
 
                 if (request.isPlaying) {
@@ -118,15 +126,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, pauseFunc) {
                     doc.getElementById("playButton").classList.remove("hidden");
                 }
 
-                if (request.songIsLiked){
+                if (request.songIsLiked) {
                     doc.getElementById("likeButton").classList.add("liked");
-                }else{
+                } else {
                     doc.getElementById("likeButton").classList.remove("liked");
                 }
             }
         }
         var w = 300;
-        var h = 300;
+        var h = 320;
         var left = (screen.width) - (w);
         var top = (screen.height) - (h);
         if (chrome.extension.getViews().length <= 1) {
