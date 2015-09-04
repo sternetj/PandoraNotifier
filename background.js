@@ -21,16 +21,37 @@ ti.prototype.equals = function(obj) {
 
 }
 
-function init() {
-  setInterval(checkForSongChange, 750);
-}
-
 var trackInfo = new ti();
 var isPlaying = true;
 var timeout = null;
 var nt = null;
 var checks = 0;
 var timeOut = null;
+
+function init() {
+  trackInfo = new ti();
+  isPlaying = true;
+  timeout = null;
+  nt = null;
+  checks = 0;
+  timeOut = null;
+  setInterval(checkForSongChange, 750);
+  $(".pauseButton, .playButton, .skipButton, .thumbUpButton, .thumbDownButton").click(function () {
+      var newTi = new ti($(".playerBarSong")[0].text,
+                     $(".playerBarArtist")[0].text,
+                     $(".playerBarAlbum")[0].text,
+                     $(".playerBarArt")[0].src);
+
+    isPlaying = $($(".pauseButton")[0]).is(":visible");
+    trackInfo.action = 'notify';
+    trackInfo.isPlaying = isPlaying;
+    trackInfo.songIsLiked = $($(".thumbUpButton")[0]).hasClass("indicator");
+    trackInfo.elapsed = $(".elapsedTime")[0].textContent;
+    trackInfo.remaining = $(".remainingTime")[0].textContent;
+    chrome.runtime.sendMessage(trackInfo,function() {});
+  });
+}
+
 function checkForSongChange() {
   var newTi = new ti($(".playerBarSong")[0].text,
                      $(".playerBarArtist")[0].text,
@@ -41,25 +62,34 @@ function checkForSongChange() {
   var elapsed = parseInt(time[0]) * 60 + parseInt(time[1]);
   var time2 = $(".remainingTime")[0].textContent.split(":");
   var toGo = parseInt(time2[0]) * -60 + parseInt(time2[1]);
+
+  //if user paused on pandora send pause update
+  //change to events
+  if (isPlaying != $($(".pauseButton")[0]).is(":visible")){
+    isPlaying = !isPlaying;
+    trackInfo.isPlaying = isPlaying;
+    chrome.runtime.sendMessage(trackInfo,function() {});
+  }
+
   //http://www.pandora.com/img/no_album_art.png
   if (!trackInfo.equals(newTi) &&
     toGo > 0 &&
     (trackInfo.image != newTi.image ||
       (trackInfo.image == "http://www.pandora.com/img/no_album_art.png" && checks++ > 4))) {
     trackInfo = newTi;
+  checks = 0;
+
+    isPlaying = $($(".pauseButton")[0]).is(":visible");
 
     //Station Name:
     //$(".shuffleStationLabelCurrent").find(".stationNameText").text().trim()
 
     trackInfo.action = 'notify';
-    trackInfo.isPlaying = $($(".pauseButton")[0]).is(":visible");
+    trackInfo.isPlaying = isPlaying;
     trackInfo.songIsLiked = $($(".thumbUpButton")[0]).hasClass("indicator");
     trackInfo.elapsed = $(".elapsedTime")[0].textContent;
     trackInfo.remaining = $(".remainingTime")[0].textContent;
-    chrome.runtime.sendMessage(trackInfo,
-        function() {
-          $(".pauseButton").click();
-        });
+    chrome.runtime.sendMessage(trackInfo,function() {});
 
     var track = trackInfo.name;
     var artist = trackInfo.artist;
@@ -125,6 +155,10 @@ function waitTilLoaded() {
 
 $(window).bind("load", function() {
   console.log("Page Loaded!");
+  // $(".skipButton").after('
+  //   <div class=".showMiniPlayer" style="display: block; float: left; margin: auto auto auto 25px;">
+  //     <img src="http://i.stack.imgur.com/To3El.png" style="width: 36px; height: 38px; -webkit-filter: invert(100%);"></img>
+  //   </div>');
   waitTilLoaded();
 });
 

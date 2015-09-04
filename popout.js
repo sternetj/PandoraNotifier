@@ -3,6 +3,7 @@ var ela = $($("#elapsedTime")[0]);
 var progressBar = $($("#progressBar")[0]);
 var progressMiddle = $($("#progressMiddle")[0]);
 var isPlaying = !($($("#playButton")[0]).hasClass("hidden"));
+var skipping = false;
 
 var formatTime = function(seconds) {
     return String(Math.floor(seconds / 60)) + ':' + (seconds % 60 < 10 ? '0' : '') + String(seconds % 60);
@@ -12,7 +13,7 @@ var showProgress = function() {
 	var isPlaying = $($("#playButton")[0]).hasClass("hidden");
     var elapsed = parseInt(ela.text().split(":")[0]) * 60 + parseInt(ela.text().split(":")[1]);
     var remaining = parseInt(rem.text().split(":")[0]) * -60 + parseInt(rem.text().split(":")[1]);
-    if (isPlaying){
+    if (isPlaying && !skipping){
     if (remaining > 0) {
 	        elapsed++;
 	        remaining--;
@@ -50,7 +51,8 @@ $("body").mouseout(function(){
 });
 
 var imageFirstLoad = true;
-$("#albumImage").load(function() { 
+$("#albumImage").load(function() {
+	skipping = false;
 	if (imageFirstLoad){
 		document.body.style.backgroundImage = "url('" + $("#albumImage")[0].src + "')";
 		imageFirstLoad = false;
@@ -60,4 +62,12 @@ $("#albumImage").load(function() {
 	    $(this).removeClass("animate").dequeue();
 	    document.body.style.backgroundImage = "url('" + $("#albumImage")[0].src + "')";
 	});
+});
+
+$("#skipButton, #dislikeButton, #pauseButton").click(function () {
+	skipping = true;
+});
+
+$("#playButton").click(function () {
+	skipping = false;
 });
