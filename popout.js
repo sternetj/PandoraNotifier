@@ -47,7 +47,7 @@ $("#albumImage").load(function() {
 		imageFirstLoad = false;
 		return;
 	}
-	$("#albumImage").addClass("animate").delay(1500).queue(function(){
+	$("#albumImage").addClass("animate").delay(1800).queue(function(){
 	    $(this).removeClass("animate").dequeue();
 	    document.body.style.backgroundImage = "url('" + $("#albumImage")[0].src + "')";
 	});

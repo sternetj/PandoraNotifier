@@ -154,7 +154,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, pauseFunc) {
                 type: "popup",
                 height: h,
                 width: w,
-                top: top,
+                top: top + 19,
                 left: left
             }, function(win) {
                 timeOut = setTimeout(function() {
