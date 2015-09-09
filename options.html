@@ -1,41 +1,21 @@
-<!--
-  Copyright (c) 2012 The Chromium Authors. All rights reserved.
-  Use of this source code is governed by a BSD-style license that can be
-  found in the LICENSE file.
-
-  Brian Kennish <bkennish@chromium.org>
-
-  An option page for configuring notifications.
--->
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <title>Notification Demo</title>
-    <link href="style.css" rel="stylesheet" type="text/css">
-    <script src="options.js"></script>
+    <title>Pandora Mini-Player</title>
   </head>
-  <body>
-    <h1>
-      <img src="64.png" alt="Toast">
-      Notification Demo
-    </h1>
-    <h2>Options</h2>
-    <form id="options">
-      <input type="checkbox" name="isActivated" checked>
-      Display a notification every
-      <select name="frequency">
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-        <option>5</option>
-        <option>10</option>
-        <option>15</option>
-        <option>20</option>
-        <option>25</option>
-        <option>30</option>
-      </select>
-      minute(s).
+  <body style="width: 250px;">
+    <h3 style="text-align: center">
+    <img src="pandora2.png" alt="Logo" width="16px" height="16px">
+    &nbsp;&nbsp;
+    Pandora Mini-Player
+    </h3>
+    <hr />
+    <form id="alwaysShow">
+      <input type="checkbox" name="isActivated"> Always Show Mini-Player
     </form>
+    <form id="firstLoad">
+      <input type="checkbox" name="isActivated"> Show Mini-Player On First Song
+    </form>
+    <script src="options.js"></script>
   </body>
 </html>

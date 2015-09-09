@@ -32,21 +32,10 @@ var showProgress = function() {
 showProgress();
 setInterval(showProgress, 1000);
 
-$("body").mouseover(function(){
-	$($("#playbackControl")[0]).addClass("show");
-});
-
 $("body").mouseenter(function(){
     $($("#playbackControl")[0]).addClass("show");
 });
-
-$("body").mousemove(function(){
-    $($("#playbackControl")[0]).addClass("show");
-});
 $("body").mouseleave(function(){
-    $($("#playbackControl")[0]).removeClass("show");
-});
-$("body").mouseout(function(){
     $($("#playbackControl")[0]).removeClass("show");
 });
 
