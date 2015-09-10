@@ -4,8 +4,8 @@
 		<link rel="icon" href="images/blank.ico">
 		<style>
 		body {
-						color: #eee;
-			font-family: "arial",Helvetica Neue,helvetica,sans-serif;
+			color: #eee;
+			font-family: "arial","Helvetica Neue","helvetica","sans-serif";
 			margin: 0;
 			overflow: hidden;
 		}
@@ -33,26 +33,26 @@
 		}
 		#playbackControl a {
 			display: block;
-			height: 48px;
-			width:  48px;
+			height: 38px;
+			width:  38px;
 		}
-		#track {
-			font-size: 1.5em;
-		}
-		#songInfo {
-		background: -moz-linear-gradient(top,  rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.3) 65%, rgba(0,0,0,0) 100%);
-		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.45)), color-stop(65%,rgba(0,0,0,0.3)), color-stop(100%,rgba(0,0,0,0)));
-		background: -webkit-linear-gradient(top,  rgba(0,0,0,0.45) 0%,rgba(0,0,0,0.3) 65%,rgba(0,0,0,0) 100%);
-		background: -o-linear-gradient(top,  rgba(0,0,0,0.45) 0%,rgba(0,0,0,0.3) 65%,rgba(0,0,0,0) 100%);
-		background: -ms-linear-gradient(top,  rgba(0,0,0,0.45) 0%,rgba(0,0,0,0.3) 65%,rgba(0,0,0,0) 100%);
-		background: linear-gradient(to bottom,  rgba(0,0,0,0.45) 0%,rgba(0,0,0,0.3) 65%,rgba(0,0,0,0) 100%);
-		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4d000000', endColorstr='#00000000',GradientType=0 );
+		#topBar {
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.4)), color-stop(65%,rgba(0,0,0,0.3)), color-stop(100%,rgba(0,0,0,0)));
+		background: -webkit-linear-gradient(top,  rgba(0,0,0,0.4) 0%,rgba(0,0,0,0.3) 65%,rgba(0,0,0,0) 100%);
+		background: linear-gradient(to bottom,  rgba(0,0,0,0.4) 0%,rgba(0,0,0,0.3) 65%,rgba(0,0,0,0) 100%);
 		position: absolute;
 		left:0;
 		right:0;
 		padding:10 10;
 		padding-bottom:10%;
 		color: #EEE;
+		}
+		#songInfo {
+			display: inline-block;			
+		}
+		#track {
+			width: calc(100% - 80px);
+			font-size: 1.4em;
 		}
 		#songInfo span {
 			display: block;
@@ -161,9 +161,9 @@
 			
 		}
 		#albumImage.animate {
-			animation: star 1.5s forwards;
+			animation: circleReveal 1.5s forwards;
 		}
-		@keyframes star {
+		@keyframes circleReveal {
 		0% {
 		opacity: 1;
 		-webkit-clip-path: circle(0px at center);
@@ -173,50 +173,83 @@
 		-webkit-clip-path: circle(100% at center);
 		}
 		}
+		#playerControl {
+			float: right;
+			display: inline-block;
+		}
+		svg {
+			fill: rgba(255,255,255,0.45);
+			height: 32px;
+			width: 32px;
+			cursor: pointer;
+		}
+		svg:hover {
+			fill: white;
+		}
 		</style>
 	</head>
 	<body id="body">
-		<img id="albumImage" src=""></img>
-		<!-- <input type="button" value="switch" id="switchMe"></input> -->
+		<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display: none;">
+			<defs>
+			<g id="showMainPlayer">
+			<path d="M19 4H5c-1.11 0-2 .9-2 2v12c0 1.1.89 2 2 2h4v-2H5V8h14v10h-4v2h4c1.1 0 2-.9 2-2V6c0-1.1-.89-2-2-2zm-7 6l-4 4h3v6h2v-6h3l-4-4z"></path>
+			</g>
+			<g id="showOptions">
+			<path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+			</g>
+		</defs>
+	</svg>
+	<img id="albumImage" src=""></img>
+	<!-- <input type="button" value="switch" id="switchMe"></input> -->
+	<div id="topBar">
 		<div id="songInfo">
-			<span><a id="track">Title</a></span>
-			<span>by <a id="artist">Artist</a></span>
-			<span>on <a id="album">Album</a></span>
+		<span><a id="track">Title</a></span>
+		<span>by <a id="artist">Artist</a></span>
+		<span>on <a id="album">Album</a></span>
 		</div>
-		<div id="playbackControl" style="display: block;">
-			<div id="buttons">
-				<div id="dislikeButton"><a></a></div>
-				<div id="likeButton"><a></a></div>
-				<div id="playButton" class="hidden"><a></a></div>
-				<div id="pauseButton"><a></a></div>
-				<div id="skipButton"><a></a></div>
-			</div>
-			<div id="progress">
-				<div id="remainingTime" class="time">-0:00</div>
-				<div id="elapsedTime" class="time">0:00</div>
-				<div id="progressBar"><img id="progressMiddle" src="images/progress-middle.png" width="0" height="4" ></div>
-			</div>
+		<div id="playerControl">
+			<svg viewBox="0 0 32 32" id="showPandora">
+				<use xlink:href="#showMainPlayer"></use>
+			</svg>
+	<!-- 		<svg viewBox="0 0 32 32">
+				<use xlink:href="#showOptions"></use>
+			</svg> -->
 		</div>
-		<script type="text/javascript" src="jquery.min.js"></script>
-		<script type="text/javascript" src="popout.js"></script>
-		<script type="text/javascript" src="gAnalytics.js"></script>
-		<!-- <script type="text/javascript">
+	</div>
+	<div id="playbackControl" style="display: block;">
+		<div id="buttons">
+			<div id="dislikeButton"><a></a></div>
+			<div id="likeButton"><a></a></div>
+			<div id="playButton" class="hidden"><a></a></div>
+			<div id="pauseButton"><a></a></div>
+			<div id="skipButton"><a></a></div>
+		</div>
+		<div id="progress">
+			<div id="remainingTime" class="time">-0:00</div>
+			<div id="elapsedTime" class="time">0:00</div>
+			<div id="progressBar"><img id="progressMiddle" src="images/progress-middle.png" width="0" height="4" ></div>
+		</div>
+	</div>
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<script type="text/javascript" src="popout.js"></script>
+	<script type="text/javascript" src="gAnalytics.js"></script>
+	<!-- <script type="text/javascript">
 			// 	document.body.style.backgroundImage = "url('pandora.png')";
 			// 	$( document ).ready( function () {
-				// 		$("#switchMe").click(function () {
-					// 			$("#albumImage").attr('src', "images/btn_up_indicator.png" );
-					// 			// $("#albumImage").addClass("animate").delay(1500).queue(function(){
-					// 			//     $(this).removeClass("animate").dequeue();
-					// 			//     document.body.style.backgroundImage = "url('" + $("#albumImage")[0].src + "')";
-					// 			// });
-				// 		});
-				// 		$("#albumImage").load(function() {
-					// 			$("#albumImage").addClass("animate").delay(1500).queue(function(){
-					// 			    $(this).removeClass("animate").dequeue();
-					// 			    document.body.style.backgroundImage = "url('" + $("#albumImage")[0].src + "')";
-					// 			});
-				// 		});
+					// 		$("#switchMe").click(function () {
+							// 			$("#albumImage").attr('src', "images/btn_up_indicator.png" );
+							// 			// $("#albumImage").addClass("animate").delay(1500).queue(function(){
+							// 			//     $(this).removeClass("animate").dequeue();
+							// 			//     document.body.style.backgroundImage = "url('" + $("#albumImage")[0].src + "')";
+							// 			// });
+					// 		});
+					// 		$("#albumImage").load(function() {
+							// 			$("#albumImage").addClass("animate").delay(1500).queue(function(){
+							// 			    $(this).removeClass("animate").dequeue();
+							// 			    document.body.style.backgroundImage = "url('" + $("#albumImage")[0].src + "')";
+							// 			});
+					// 		});
 			// 	});
-		// </script> -->
-	</body>
+	// </script> -->
+</body>
 </html>

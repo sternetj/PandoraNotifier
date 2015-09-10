@@ -3,22 +3,13 @@ var firstTime = true;
 var lastRequest = {};
 
 if (!localStorage.isInitialized) {
-    localStorage.alwaysShow = true;
-    localStorage.firstLoad = false;
+    localStorage.alwaysShow = false;
+    localStorage.firstLoad = true;
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, pauseFunc) {
     console.log(request);
-    console.log(sender);
     if (request && request.action === 'notify') {
-
-        var t = JSON.parse(localStorage.alwaysShow);
-        var t2 = JSON.parse(localStorage.firstLoad);
-        if (!(t || (t2 && firstTime))) {
-            firstTime = false;
-            return;
-        }
-        firstTime = false;
 
         var updatePlayer = function() {
             var views = chrome.extension.getViews();
@@ -41,17 +32,32 @@ chrome.runtime.onMessage.addListener(function(request, sender, pauseFunc) {
                 doc.getElementById("albumImage").src = (request && request.image) ? request.image : "http://www.pandora.com/img/no_album_art.png";
 
                 var sendMessage = function(action, callback) {
-                    var innerCallback = function(status) {
-                        callback(status)
-                    }
                     chrome.tabs.query({}, function(tabs) {
+                        var tab = null;
                         for (var tInd in tabs) {
-                            chrome.tabs.sendMessage(tabs[tInd].id, action, function(status) {
-                                callback(status, tabs[tInd]);
+                            if (tabs[tInd].url.indexOf("pandora.com") > -1){
+                                tab = tabs[tInd];
+                                break;
+                            }
+                        }
+                        chrome.tabs.sendMessage(tab.id, action, function(status) {
+                            callback(status, tab);
+                        });
+                    });
+                };
+
+                var showTab = function(tab){
+                    chrome.tabs.update(tab.id, {
+                        highlighted: true
+                    });
+                    chrome.windows.get(tab.windowId, function (win){
+                        if (win.state === "minimized"){
+                            chrome.windows.update(tab.windowId, {
+                                state: "docked"
                             });
                         }
                     });
-                }
+                };
 
                 doc.getElementById("playButton").onclick = function() {
                     sendMessage("play", function(status) {
@@ -94,27 +100,26 @@ chrome.runtime.onMessage.addListener(function(request, sender, pauseFunc) {
                     });
                 };
                 doc.getElementById("track").onclick = function() {
-                    sendMessage("seeSong", function(status) {
+                    sendMessage("seeSong", function(status, tab) {
                         if (status === "ok") {
                             console.log("success!");
+                            showTab(tab);
                         }
                     });
                 };
                 doc.getElementById("artist").onclick = function() {
-                    sendMessage("seeArtist", function(status) {
-                        if (status === "ok") {
-                            console.log("success!");
-                        }
+                    sendMessage("seeArtist", function(status, tab) {
+                        showTab(tab);
                     });
                 };
                 doc.getElementById("album").onclick = function() {
                     sendMessage("seeAlbum", function(status, tab) {
-                        if (status === "ok") {
-                            console.log("success!");
-                            chrome.tabs.update(tab.id, {
-                                highlighted: true
-                            });
-                        }
+                        showTab(tab);
+                    });
+                };
+                doc.getElementById("showPandora").onclick = function() {
+                    sendMessage("showPandora", function(status, tab) {
+                        showTab(tab);
                     });
                 };
 
@@ -148,7 +153,18 @@ chrome.runtime.onMessage.addListener(function(request, sender, pauseFunc) {
                 miniPlayerExists = (doc.location.href.indexOf("popout.html") > -1);
             }
         }
+
+        var showNow = ('showNow' in request);
         if (!miniPlayerExists) {
+
+            var t = JSON.parse(localStorage.alwaysShow);
+            var t2 = JSON.parse(localStorage.firstLoad);
+            if (!(t || (t2 && firstTime) || showNow)) {
+                firstTime = false;
+                return;
+            }
+            firstTime = false;
+
             chrome.windows.create({
                 url: 'popout.html',
                 type: "popup",
@@ -163,6 +179,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, pauseFunc) {
             });
         } else {
             updatePlayer();
+
+            if (showNow){
+                chrome.windows.update(views[miniPlayerIndex].windowId, {
+                                state: "docked"
+                            });
+            }
         }
     }
 });

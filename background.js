@@ -1,5 +1,3 @@
-console.log("Welcome to Pandora!");
-
 function ti() {
     this.name = "";
     this.artist = "";
@@ -29,9 +27,12 @@ var checks = 0;
 var timeOut = null;
 var firstTime = true;
 
-function sendMessage(callback) {
+function sendMessage(callback, showPlayer) {
     isPlaying = $($(".pauseButton")[0]).is(":visible");
     trackInfo.action = 'notify';
+    if (showPlayer){
+        trackInfo.showNow = true;
+    }
     trackInfo.isPlaying = isPlaying;
     trackInfo.songIsLiked = $($(".thumbUpButton")[0]).hasClass("indicator");
     trackInfo.elapsed = $(".elapsedTime")[0].textContent;
@@ -54,6 +55,7 @@ function init() {
         }, 200);
     });
 }
+
 
 function checkForSongChange() {
     var newTi = new ti($(".playerBarSong")[0].text,
@@ -87,14 +89,77 @@ function checkForSongChange() {
     }
 }
 
+function addMiniPlayerButton(){
+        //Add mini-player button
+    var css = '\
+        .miniplayer_icon:hover {\
+            color: #fff;\
+            text-decoration: underline;\
+        }\
+\
+        .miniplayer_icon {\
+            width: 51px;\
+            height: 20px;\
+            cursor: pointer;\
+            font-size: 12px;\
+            font-weight: normal;\
+            color: #d6deea;\
+            padding-top: 6px;\
+            white-space: nowrap;\
+        }\
+\
+        .miniplayer_icon > svg {\
+            cursor: pointer;\
+            display: inline-block;\
+            margin-right: 4px;\
+            color:#d6deea;\
+            fill:#C2CBDA;\
+            vertical-align: text-bottom;\
+        }\
+\
+        .miniplayer_icon:hover > svg {\
+            fill: #d6deea;\
+        }\
+\
+        .miniplayer {\
+            padding: 0 20px 0 4px;\
+            float: left;\
+            line-height:15px;\
+            height:15px;\
+        }\
+    ',
+    head = document.head || document.getElementsByTagName('head')[0],
+    style = document.createElement('style');
+
+    style.type = 'text/css';
+    if (style.styleSheet){
+      style.styleSheet.cssText = css;
+    } else {
+      style.appendChild(document.createTextNode(css));
+    }
+
+    head.appendChild(style);
+    var showPlayerButton = '<div class="miniplayer"><div class="miniplayer_icon"><svg viewBox="0 0 24 24" height="15px" width="15px" preserveAspectRatio="xMidYMid meet" fit=""><g><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></g></svg>Show Mini-Player</div></div>'
+    $(".myprofile").after(showPlayerButton);
+
+    $(".miniplayer").mouseup(function() {
+        setTimeout(function() {
+            sendMessage(function() {}, true);
+        }, 200);
+    });
+}
+
+var buttonLoaded = false;
 function waitTilLoaded() {
     setTimeout(
         function() {
-            console.log("loop called");
+            if(!buttonLoaded && $(".myprofile").length > 0){
+                addMiniPlayerButton();
+                buttonLoaded = true;
+            }
             if ($(".songTitle").length <= 0 || !($(".songTitle")[0].text)) {
                 waitTilLoaded();
             } else {
-                console.log("title exists!");
                 init();
             }
         }, 750);
