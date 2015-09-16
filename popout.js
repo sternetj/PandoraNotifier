@@ -29,34 +29,67 @@ var showProgress = function() {
 
 }
 
-showProgress();
-setInterval(showProgress, 1000);
+$(document).ready(function(){
+	showProgress();
+	setInterval(showProgress, 1000);
 
-$("body").mouseenter(function(){
-    $($("#playbackControl")[0]).addClass("show");
-});
-$("body").mouseleave(function(){
-    $($("#playbackControl")[0]).removeClass("show");
-});
-
-var imageFirstLoad = true;
-$("#albumImage").load(function() {
-	skipping = false;
-	if (imageFirstLoad){
-		document.body.style.backgroundImage = "url('" + $("#albumImage")[0].src + "')";
-		imageFirstLoad = false;
-		return;
-	}
-	$("#albumImage").addClass("animate").delay(1800).queue(function(){
-	    $(this).removeClass("animate").dequeue();
-	    document.body.style.backgroundImage = "url('" + $("#albumImage")[0].src + "')";
+	$("body").mouseenter(function(){
+	    $($("#playbackControl")[0]).addClass("show");
 	});
+	$("body").mouseleave(function(){
+	    $($("#playbackControl")[0]).removeClass("show");
+	});
+
+	var imageFirstLoad = true;
+	$("#albumImage").load(function() {
+		skipping = false;
+		if (imageFirstLoad){
+			document.body.style.backgroundImage = "url('" + $("#albumImage")[0].src + "')";
+			imageFirstLoad = false;
+			return;
+		}
+		$("#albumImage").addClass("animate").delay(1800).queue(function(){
+		    $(this).removeClass("animate").dequeue();
+		    document.body.style.backgroundImage = "url('" + $("#albumImage")[0].src + "')";
+		});
+	});
+
+	$("#skipButton, #dislikeButton, #pauseButton").mouseup(function () {
+		skipping = true;
+	});
+
+	$("#playButton").mouseup(function () {
+		skipping = false;
+	});
+
+	$("#showOptionsMenu").click(function(e) {
+		if ($("#menu").is(":visible")){
+			$("#menu").hide();
+		}else {
+			$("#menu").show();
+		}
+	});
+
+	$("#showOnTop").click(function(e){
+		setTimeout(function (){
+			$("#menu").hide();
+		},750)
+	});
+
+	$("#albumImage").click(function (){
+		$("#menu").hide();
+	});
+
+	setTimeout(function () {
+		$("#RateMe").addClass("show");
+	},2700000); //After 45 minutes
+
+	$("#sendRating").click(function (){
+		parent.window.open('https://chrome.google.com/webstore/detail/pandora-mini-player/dkelbanlilodfdekbpibpegknfcajnia/reviews', '_blank');
+	});
+
+	$("#noRate, #sendRating").click(function (){
+		$("#RateMe").removeClass("show");
+	});	
 });
 
-$("#skipButton, #dislikeButton, #pauseButton").click(function () {
-	skipping = true;
-});
-
-$("#playButton").click(function () {
-	skipping = false;
-});

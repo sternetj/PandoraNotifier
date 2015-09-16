@@ -11,6 +11,41 @@ chrome.runtime.onMessage.addListener(function(request, sender, pauseFunc) {
     console.log(request);
     if (request && request.action === 'notify') {
 
+        var showTab = function(tab) {
+            if (!tab || !tab.id) return;
+
+            chrome.tabs.update(tab.id, {
+                highlighted: true
+            });
+
+            if (!tab.windowId) return;
+            chrome.windows.get(tab.windowId, function(win) {
+                var options = {
+                    focused: true
+                }
+                if (win.state === "minimized") {
+                    options.state = "docked";
+                }
+
+                chrome.windows.update(tab.windowId, options);
+            });
+        };
+
+        var setPlayerOnTop = function(isOnTop){
+            chrome.tabs.query({}, function(tabs) {
+                var tab = null;
+                for (var tInd in tabs) {
+                    if (tabs[tInd].url.indexOf("popout.html") > -1) {
+                        tab = tabs[tInd];
+                        break;
+                    }
+                }
+                if(tab){
+                    chrome.windows.update(tab.windowId, {alwaysOnTop: true});
+                }
+            });
+        };
+
         var updatePlayer = function() {
             var views = chrome.extension.getViews();
             if (views.length > 1) {
@@ -19,7 +54,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, pauseFunc) {
                 while (miniPlayerIndex < views.length - 1 && !(doc.location.href.indexOf("popout.html") > -1)) {
                     doc = views[++miniPlayerIndex].document;
                 }
-                if (!(doc.location.href.indexOf("popout.html") > -1)){
+                if (!(doc.location.href.indexOf("popout.html") > -1)) {
                     return;
                 }
                 //doc.title = " ";
@@ -35,7 +70,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, pauseFunc) {
                     chrome.tabs.query({}, function(tabs) {
                         var tab = null;
                         for (var tInd in tabs) {
-                            if (tabs[tInd].url.indexOf("pandora.com") > -1){
+                            if (tabs[tInd].url.indexOf("pandora.com") > -1) {
                                 tab = tabs[tInd];
                                 break;
                             }
@@ -43,19 +78,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, pauseFunc) {
                         chrome.tabs.sendMessage(tab.id, action, function(status) {
                             callback(status, tab);
                         });
-                    });
-                };
-
-                var showTab = function(tab){
-                    chrome.tabs.update(tab.id, {
-                        highlighted: true
-                    });
-                    chrome.windows.get(tab.windowId, function (win){
-                        if (win.state === "minimized"){
-                            chrome.windows.update(tab.windowId, {
-                                state: "docked"
-                            });
-                        }
                     });
                 };
 
@@ -122,6 +144,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, pauseFunc) {
                         showTab(tab);
                     });
                 };
+                $(doc.getElementById("showOnTop")).change(function () {
+                    setPlayerOnTop(this.checked);
+                });
 
                 if (request.isPlaying) {
                     doc.getElementById("playButton").classList.add("hidden");
@@ -154,7 +179,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, pauseFunc) {
             }
         }
 
-        var showNow = ('showNow' in request);
+        var showNow = ('showNow' in request) && request.showNow;
         if (!miniPlayerExists) {
 
             var t = JSON.parse(localStorage.alwaysShow);
@@ -175,15 +200,23 @@ chrome.runtime.onMessage.addListener(function(request, sender, pauseFunc) {
             }, function(win) {
                 timeOut = setTimeout(function() {
                     updatePlayer();
-                }, 100);
+                }, 50);
             });
         } else {
             updatePlayer();
 
             if (showNow){
-                chrome.windows.update(views[miniPlayerIndex].windowId, {
-                                state: "docked"
-                            });
+
+                chrome.tabs.query({}, function(tabs) {
+                    var tab = null;
+                    for (var tInd in tabs) {
+                        if (tabs[tInd].url.indexOf("popout.html") > -1) {
+                            tab = tabs[tInd];
+                            break;
+                        }
+                    }
+                    showTab(tab);
+                });
             }
         }
     }

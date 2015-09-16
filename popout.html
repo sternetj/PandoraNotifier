@@ -2,191 +2,7 @@
 	<head>
 		<title>&lrm;</title>
 		<link rel="icon" href="images/blank.ico">
-		<style>
-		body {
-			color: #eee;
-			font-family: "arial","Helvetica Neue","helvetica","sans-serif";
-			margin: 0;
-			overflow: hidden;
-		}
-		#body {
-			background-color: #202638;
-			/*background-color: #FFF;*/
-			-webkit-background-size: cover;
-		-moz-background-size: cover;
-		-o-background-size: cover;
-		background-size: cover;
-		}
-		a {
-			cursor: pointer;
-		}
-		#playbackControl {
-			background-color: #465c7d;
-			position: absolute;
-			bottom: 0;
-			display: block;
-			padding-top: 2px;
-			vertical-align: center;
-			text-align: center;
-			width: -webkit-calc(100% - 16px);
-			margin: 8 8;
-		}
-		#playbackControl a {
-			display: block;
-			height: 38px;
-			width:  38px;
-		}
-		#topBar {
-		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.4)), color-stop(65%,rgba(0,0,0,0.3)), color-stop(100%,rgba(0,0,0,0)));
-		background: -webkit-linear-gradient(top,  rgba(0,0,0,0.4) 0%,rgba(0,0,0,0.3) 65%,rgba(0,0,0,0) 100%);
-		background: linear-gradient(to bottom,  rgba(0,0,0,0.4) 0%,rgba(0,0,0,0.3) 65%,rgba(0,0,0,0) 100%);
-		position: absolute;
-		left:0;
-		right:0;
-		padding:10 10;
-		padding-bottom:10%;
-		color: #EEE;
-		}
-		#songInfo {
-			display: inline-block;			
-		}
-		#track {
-			width: calc(100% - 80px);
-			font-size: 1.4em;
-		}
-		#songInfo span {
-			display: block;
-		}
-		#songInfo a {
-			color: inherit;
-			text-decoration: none;
-		}
-		#songInfo a:hover {
-		text-decoration: underline;
-		}
-		#playButton, #pauseButton, #skipButton, #likeButton, #dislikeButton {
-			margin: 6px 19px 0 3px;
-			float: left;
-		}
-		#playButton > a {
-			background: url('images/btn_play.png') no-repeat center right;
-			width: 36px;
-			height: 38px;
-		}
-		#pauseButton > a {
-			background: url('images/btn_pause.png') no-repeat center right;
-			width: 36px;
-			height: 38px;
-		}
-		#skipButton > a {
-			background: url('images/btn_skip.png') no-repeat top left;
-			width: 36px;
-			height: 38px;
-		}
-		#likeButton > a {
-			background: url('images/btn_up.png') no-repeat top left;
-			width: 36px;
-			height: 38px;
-		}
-		#likeButton.liked > a {
-			background: url('images/btn_up_indicator.png') no-repeat top left;
-			width: 36px;
-			height: 38px;
-		}
-		#dislikeButton > a {
-			background: url('images/btn_down.png') no-repeat top left;
-			width: 36px;
-			height: 38px;
-		}
-		#buttons {
-			margin: 0 auto;
-			text-align: center;
-			height: 43px;
-			width: 240px;
-		}
-		#progressBar {
-			height: 4px;
-			overflow: hidden;
-			background-color: #0f304f;
-			text-align: left;
-			vertical-align: middle;
-			border-radius: 2px;
-		}
-		#progress {
-			width: 100%;
-			clear: both;
-			margin-left: 3;
-			margin-right: auto;
-		}
-		.time {
-			position: relative;
-			width: 35px;
-			vertical-align: top;
-			margin-top: -6px;
-			font-size: 12px;
-			color: #d1dbea;
-		}
-		#remainingTime {
-			float: right;
-			text-align: left;
-			padding-left: 3px;
-			width: 40px;
-		}
-		#elapsedTime {
-			float: left;
-			width: 40px;
-			padding-right: 3px;
-			text-align: right;
-		}
-		.hidden {
-			display: none;
-		}
-		#playbackControl {
-			transition: all 0.75s ease;
-			transform: translateY(65px);
-			opacity: 0;
-		}
-		#playbackControl.show {
-			transform: translateY(0px);
-			opacity: 1;
-		}
-		#buttons {
-			margin-bottom: 4px;
-		}
-		#albumImage {
-			opacity: 0;
-			position: absolute;
-			object-fit: cover;
-			width: 100vw;
-			
-		}
-		#albumImage.animate {
-			animation: circleReveal 1.5s forwards;
-		}
-		@keyframes circleReveal {
-		0% {
-		opacity: 1;
-		-webkit-clip-path: circle(0px at center);
-		}
-		100% {
-		opacity: 1;
-		-webkit-clip-path: circle(100% at center);
-		}
-		}
-		#playerControl {
-			float: right;
-			display: inline-block;
-		}
-		svg {
-			fill: rgba(255,255,255,0.45);
-			height: 32px;
-			width: 32px;
-			cursor: pointer;
-		}
-		svg:hover {
-			fill: white;
-		}
-		</style>
+		<link rel="stylesheet" type="text/css" href="style.css">
 	</head>
 	<body id="body">
 		<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display: none;">
@@ -211,7 +27,7 @@
 			<svg viewBox="0 0 32 32" id="showPandora">
 				<use xlink:href="#showMainPlayer"></use>
 			</svg>
-	<!-- 		<svg viewBox="0 0 32 32">
+			<!-- <svg viewBox="0 0 32 32" id="showOptionsMenu">
 				<use xlink:href="#showOptions"></use>
 			</svg> -->
 		</div>
@@ -230,26 +46,20 @@
 			<div id="progressBar"><img id="progressMiddle" src="images/progress-middle.png" width="0" height="4" ></div>
 		</div>
 	</div>
+	<div id="menu">
+		<input type="checkbox" value="onTop" id="showOnTop" />
+		Always on top
+	</div>
+	<div id="RateMe">
+		<p>Thank you for using the Pandora Mini-Player.</p>
+		<p>Please consider rating this extension in the Chrome Webstore</p>
+		<div class="options">
+			<input type="button" value="Rate" id="sendRating"/>
+			<input type="button" value="No Thanks" id="noRate"/>
+		</div>
+	</div>
 	<script type="text/javascript" src="jquery.min.js"></script>
 	<script type="text/javascript" src="popout.js"></script>
 	<script type="text/javascript" src="gAnalytics.js"></script>
-	<!-- <script type="text/javascript">
-			// 	document.body.style.backgroundImage = "url('pandora.png')";
-			// 	$( document ).ready( function () {
-					// 		$("#switchMe").click(function () {
-							// 			$("#albumImage").attr('src', "images/btn_up_indicator.png" );
-							// 			// $("#albumImage").addClass("animate").delay(1500).queue(function(){
-							// 			//     $(this).removeClass("animate").dequeue();
-							// 			//     document.body.style.backgroundImage = "url('" + $("#albumImage")[0].src + "')";
-							// 			// });
-					// 		});
-					// 		$("#albumImage").load(function() {
-							// 			$("#albumImage").addClass("animate").delay(1500).queue(function(){
-							// 			    $(this).removeClass("animate").dequeue();
-							// 			    document.body.style.backgroundImage = "url('" + $("#albumImage")[0].src + "')";
-							// 			});
-					// 		});
-			// 	});
-	// </script> -->
 </body>
 </html>

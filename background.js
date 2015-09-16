@@ -184,13 +184,13 @@ chrome.runtime.onMessage.addListener(function(action, _, sendResponse) {
         $(".skipButton").click();
         sendResponse("ok");
     } else if (action === "seeSong") {
-        $(".songTitle").click();
+        $(".songTitle")[0].click();
         sendResponse("ok");
     } else if (action === "seeArtist") {
-        $(".artistSummary").click();
+        $(".artistSummary")[0].click();
         sendResponse("ok");
     } else if (action === "seeAlbum") {
-        $(".albumTitle").click();
+        $(".albumTitle")[0].click();
         sendResponse("ok");
     } else {
         sendResponse("error: no action - " + action);
