@@ -80,11 +80,14 @@ $(document).ready(function(){
 		$("#menu").hide();
 	});
 
-	setTimeout(function () {
-		$("#RateMe").addClass("show");
-	},2700000); //After 45 minutes
+	if (!(localStorage.hasRated && JSON.parse(localStorage.hasRated))){
+		setTimeout(function () {
+			$("#RateMe").addClass("show");
+		},2700000); //After 45 minutes
+	}
 
 	$("#sendRating").click(function (){
+		localStorage.hasRated = true;
 		parent.window.open('https://chrome.google.com/webstore/detail/pandora-mini-player/dkelbanlilodfdekbpibpegknfcajnia/reviews', '_blank');
 	});
 

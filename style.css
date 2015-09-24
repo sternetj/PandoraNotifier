@@ -216,6 +216,7 @@ svg:hover {
 }
 #RateMe > .options {
     float: right;
+    opacity: 1;
 }
 #RateMe > * {
     padding-right: 40px;

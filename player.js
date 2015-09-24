@@ -5,6 +5,7 @@ var lastRequest = {};
 if (!localStorage.isInitialized) {
     localStorage.alwaysShow = false;
     localStorage.firstLoad = true;
+    localStorage.hasRated = false;
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, pauseFunc) {
