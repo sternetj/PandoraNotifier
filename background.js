@@ -30,13 +30,27 @@ var firstTime = true;
 function sendMessage(callback, showPlayer) {
     isPlaying = $($(".pauseButton")[0]).is(":visible");
     trackInfo.action = 'notify';
-    if (showPlayer){
+    trackInfo.showNow = false;
+    if (showPlayer) {
         trackInfo.showNow = true;
     }
     trackInfo.isPlaying = isPlaying;
     trackInfo.songIsLiked = $($(".thumbUpButton")[0]).hasClass("indicator");
     trackInfo.elapsed = $(".elapsedTime")[0].textContent;
     trackInfo.remaining = $(".remainingTime")[0].textContent;
+
+    //Get stations
+    var stations = $(".stationListItem li div");
+    var stationsObj = [];
+    stations.each(function(index) {
+        stationsObj.push({
+            name: $(this).text().trim(),
+            selected: $(this).parent().parent().parent().hasClass("selected") || $(this).parent().parent().parent().parent().hasClass("selected"),
+            checked: $(this).parent().find(".checkbox").hasClass("checked"),
+            playing: $(this).parent().hasClass("shuffleStationLabelCurrent")
+        });
+    });
+    trackInfo.stations = stationsObj;
 
     chrome.runtime.sendMessage(trackInfo, callback);
 }
@@ -48,7 +62,7 @@ function init() {
     nt = null;
     checks = 0;
     timeOut = null;
-    setInterval(checkForSongChange, 750);
+    setInterval(checkForSongChange, 300);
     $(".pauseButton, .playButton, .skipButton, .thumbUpButton, .thumbDownButton").mouseup(function() {
         setTimeout(function() {
             sendMessage(function() {});
@@ -69,12 +83,9 @@ function checkForSongChange() {
     var toGo = parseInt(time2[0]) * -60 + parseInt(time2[1]);
 
     //http://www.pandora.com/img/no_album_art.png
-    if (!trackInfo.equals(newTi) &&
-        toGo > 0 && 
-        (trackInfo.image != newTi.image ||
-            (trackInfo.image == "http://www.pandora.com/img/no_album_art.png" && checks++ > 4)
-        )
-    ) {
+    if (!trackInfo.equals(newTi) && (trackInfo.image != newTi.image ||
+        (trackInfo.image == "http://www.pandora.com/img/no_album_art.png" && checks++ > 4)
+    )) {
         trackInfo = newTi;
         checks = 0;
 
@@ -87,55 +98,53 @@ function checkForSongChange() {
 
         //console.log("Next Song is: " + track);
     }
+    if (elapsed > 0 && elapsed < 2){
+        sendMessage(function() {});
+    }
 }
 
-function addMiniPlayerButton(){
-        //Add mini-player button
-    var css = '\
-        .miniplayer_icon:hover {\
-            color: #fff;\
-            text-decoration: underline;\
-        }\
-\
-        .miniplayer_icon {\
-            width: 51px;\
-            height: 20px;\
-            cursor: pointer;\
-            font-size: 12px;\
-            font-weight: normal;\
-            color: #d6deea;\
-            padding-top: 6px;\
-            white-space: nowrap;\
-        }\
-\
-        .miniplayer_icon > svg {\
-            cursor: pointer;\
-            display: inline-block;\
-            margin-right: 4px;\
-            color:#d6deea;\
-            fill:#C2CBDA;\
-            vertical-align: text-bottom;\
-        }\
-\
-        .miniplayer_icon:hover > svg {\
-            fill: #d6deea;\
-        }\
-\
-        .miniplayer {\
-            padding: 0 20px 0 4px;\
-            float: left;\
-            line-height:15px;\
-            height:15px;\
-        }\
-    ',
-    head = document.head || document.getElementsByTagName('head')[0],
-    style = document.createElement('style');
+function addMiniPlayerButton() {
+    //Add mini-player button
+    var css = ['.miniplayer_icon:hover {',
+            ' color: #fff;',
+            ' text-decoration: underline;',
+            ' }', '',
+            ' .miniplayer_icon {',
+            ' width: 51px;',
+            ' height: 20px;',
+            ' cursor: pointer;',
+            ' font-size: 12px;',
+            ' font-weight: normal;',
+            ' color: #d6deea;',
+            ' padding-top: 6px;',
+            ' white-space: nowrap;',
+            ' }', '',
+            ' .miniplayer_icon > svg {',
+            ' cursor: pointer;',
+            ' display: inline-block;',
+            ' margin-right: 4px;',
+            ' color:#d6deea;',
+            ' fill:#C2CBDA;',
+            ' vertical-align: text-bottom;',
+            ' }', '',
+            ' .miniplayer_icon:hover > svg {',
+            ' fill: #d6deea;',
+            ' }', '',
+            ' .miniplayer {',
+            ' padding: 0 20px 0 4px;',
+            ' float: left;',
+            ' line-height:15px;',
+            ' height:15px;',
+            ' }'
+        ].join('\n'),
+        head = document.head || document.getElementsByTagName('head')[0],
+        style = document.createElement('style');
 
     style.type = 'text/css';
-    if (style.styleSheet){
-      style.styleSheet.cssText = css;
+    if (style.styleSheet) {
+        style.styleSheet.cssText = css;
     } else {
-      style.appendChild(document.createTextNode(css));
+        style.appendChild(document.createTextNode(css));
     }
 
     head.appendChild(style);
@@ -150,10 +159,11 @@ function addMiniPlayerButton(){
 }
 
 var buttonLoaded = false;
+
 function waitTilLoaded() {
     setTimeout(
         function() {
-            if(!buttonLoaded && $(".myprofile").length > 0){
+            if (!buttonLoaded && $(".myprofile").length > 0) {
                 addMiniPlayerButton();
                 buttonLoaded = true;
             }
@@ -191,6 +201,33 @@ chrome.runtime.onMessage.addListener(function(action, _, sendResponse) {
         sendResponse("ok");
     } else if (action === "seeAlbum") {
         $(".albumTitle")[0].click();
+        sendResponse("ok");
+    } else if (action.split('-')[0] === "changeStation") {
+        var index = parseInt(action.split('-')[1]);
+        if (index >= 0) {
+            $($(".stationListItem li div")[index]).click();
+            setTimeout(function() {
+                sendMessage(function() {});
+            }, 200);
+        }
+        sendResponse("ok");
+    } else if (action.split('-')[0] === "addDropShuffleStation") {
+        var index = parseInt(action.split('-')[1]);
+        if (index > 0) {
+            index -= 1;
+
+            var actualCode = ['var $span = $($(".stationName li span")[' + index + ']);',
+                  ' $span.mousedown().mouseup().click().change();'].join('\n');
+
+            var script = document.createElement('script');
+            script.textContent = actualCode;
+            (document.head||document.documentElement).appendChild(script);
+            script.parentNode.removeChild(script);
+
+            setTimeout(function() {
+                sendMessage(function() {});
+            }, 800);
+        }
         sendResponse("ok");
     } else {
         sendResponse("error: no action - " + action);

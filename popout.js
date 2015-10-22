@@ -24,6 +24,7 @@ var showProgress = function() {
 	        progressMiddle.width(progressBar.width() * percentDone);
 	    }else{
 	    	progressMiddle.width(0);
+	    	ela.text(formatTime(0));
 	    }
 	}
 
@@ -58,6 +59,10 @@ $(document).ready(function(){
 		skipping = true;
 	});
 
+	$("#dislikeButton").click(function () {
+		$("#dislikeButton").addClass("dislike");
+	});
+
 	$("#playButton").mouseup(function () {
 		skipping = false;
 	});
@@ -70,7 +75,7 @@ $(document).ready(function(){
 		}
 	});
 
-	$("#showOnTop").click(function(e){
+	$("#showOnTop, #menu a").click(function(e){
 		setTimeout(function (){
 			$("#menu").hide();
 		},750)
@@ -80,14 +85,16 @@ $(document).ready(function(){
 		$("#menu").hide();
 	});
 
-	if (!(localStorage.hasRated && JSON.parse(localStorage.hasRated))){
-		setTimeout(function () {
-			$("#RateMe").addClass("show");
-		},2700000); //After 45 minutes
-	}
+	chrome.storage.sync.get(null, function (o){
+		if (o.hasOwnProperty('hasRated') && !o.hasRated){
+			setTimeout(function () {
+				$("#RateMe").addClass("show");
+			},2700000); //After 45 minutes
+		}
+	});
 
 	$("#sendRating").click(function (){
-		localStorage.hasRated = true;
+		chrome.storage.sync.set({'hasRated': true});
 		parent.window.open('https://chrome.google.com/webstore/detail/pandora-mini-player/dkelbanlilodfdekbpibpegknfcajnia/reviews', '_blank');
 	});
 

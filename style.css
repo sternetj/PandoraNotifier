@@ -1,6 +1,6 @@
 body {
     color: #eee;
-    font-family: "arial", "Helvetica Neue", "helvetica", "sans-serif";
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     margin: 0;
     overflow: hidden;
 }
@@ -15,6 +15,11 @@ body {
 }
 a {
     cursor: pointer;
+}
+input[type="checkbox"] {
+    -webkit-transform: scale(1.25);
+    -moz-transform: scale(1.25);
+    transform: scale(1.25);
 }
 #playbackControl {
     background-color: #465c7d;
@@ -45,7 +50,7 @@ a {
 }
 #songInfo {
     display: inline-block;
-    width: calc(100% - 40px);
+    width: calc(100% - 80px);
 }
 #track {
     font-size: 1.4em;
@@ -95,6 +100,11 @@ a {
 }
 #dislikeButton > a {
     background: url('images/btn_down.png') no-repeat top left;
+    width: 36px;
+    height: 38px;
+}
+#dislikeButton.dislike > a {
+    background: url('images/btn_down_indicator.png') no-repeat top left;
     width: 36px;
     height: 38px;
 }
@@ -199,9 +209,45 @@ svg:hover {
     padding-bottom: 25px;
     right: 30px;
     top: 40px;
-    overflow: hidden;
-    white-space: nowrap;
+    overflow-y: auto; 
+    /*overflow: hidden;
+    white-space: nowrap;*/
     display: none;
+    max-height: calc(100% - 120px);
+    max-width: calc(100% - 90px)
+}
+#menu div a {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+}
+
+#menu > div:first-of-type > a
+{
+    background-image: url('images/shuffle-icon.png');
+    background-repeat: no-repeat;
+    padding-left: 20px;
+    background-position: left center;
+}
+#menu > div {
+    padding: 3px 0px;
+    display: flex;
+}
+#menu > div:hover {
+    background-color: #c5dbf7;
+}
+#menu > div:first-of-type > a:hover
+{
+    background-image: url('images/shuffle-icon-hover.png');
+}
+#menu > div.selected {
+    background-color: #eadd72 !Important;
+    padding: 5px;
+}
+#menu > div.playing {
+    color: #cc7800;
 }
 #RateMe {
     width: 100%;
