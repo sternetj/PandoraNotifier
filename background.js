@@ -27,7 +27,7 @@ var checks = 0;
 var timeOut = null;
 var firstTime = true;
 
-function sendMessage(callback, showPlayer) {
+function getTrackInfo(showPlayer){
     isPlaying = $($(".pauseButton")[0]).is(":visible");
     trackInfo.action = 'notify';
     trackInfo.showNow = false;
@@ -52,7 +52,11 @@ function sendMessage(callback, showPlayer) {
     });
     trackInfo.stations = stationsObj;
 
-    chrome.runtime.sendMessage(trackInfo, callback);
+    return trackInfo;
+}
+
+function sendMessage(callback, showPlayer) {
+    chrome.runtime.sendMessage(getTrackInfo(showPlayer), callback);
 }
 
 function init() {
@@ -98,7 +102,9 @@ function checkForSongChange() {
 
         //console.log("Next Song is: " + track);
     }
-    if (elapsed > 0 && elapsed < 2){
+
+    isPlaying = $($(".pauseButton")[0]).is(":visible");
+    if (elapsed > 0 && elapsed < 2 && isPlaying){
         sendMessage(function() {});
     }
 }
@@ -202,6 +208,8 @@ chrome.runtime.onMessage.addListener(function(action, _, sendResponse) {
     } else if (action === "seeAlbum") {
         $(".albumTitle")[0].click();
         sendResponse("ok");
+    } else if (action === "getTrackInfo"){
+        sendResponse(getTrackInfo(true));
     } else if (action.split('-')[0] === "changeStation") {
         var index = parseInt(action.split('-')[1]);
         if (index >= 0) {

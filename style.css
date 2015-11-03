@@ -1,6 +1,10 @@
+@font-face {
+    font-family: HelveticaNeue;
+    src: url(fonts/HelveticaNeue-Medium.ttf);
+}
 body {
     color: #eee;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif;
     margin: 0;
     overflow: hidden;
 }
@@ -216,7 +220,7 @@ svg:hover {
     max-height: calc(100% - 120px);
     max-width: calc(100% - 90px)
 }
-#menu div a {
+.stations div a {
     display: inline-block;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -224,29 +228,29 @@ svg:hover {
     width: 100%;
 }
 
-#menu > div:first-of-type > a
+.stations > div:first-of-type > a
 {
     background-image: url('images/shuffle-icon.png');
     background-repeat: no-repeat;
     padding-left: 20px;
     background-position: left center;
 }
-#menu > div {
+.stations > div {
     padding: 3px 0px;
     display: flex;
 }
-#menu > div:hover {
+.stations > div:hover {
     background-color: #c5dbf7;
 }
-#menu > div:first-of-type > a:hover
+.stations > div:first-of-type > a:hover
 {
     background-image: url('images/shuffle-icon-hover.png');
 }
-#menu > div.selected {
+.stations > div.selected {
     background-color: #eadd72 !Important;
     padding: 5px;
 }
-#menu > div.playing {
+.stations > div.playing {
     color: #cc7800;
 }
 #RateMe {
