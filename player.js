@@ -59,7 +59,6 @@ function notify(request){
                 return;
             }
 
-            //doc.title = " ";
             var body = doc.body;
             if (doc.getElementById("albumImage").src != ((request && request.image) ? request.image : "http://www.pandora.com/img/no_album_art.png")){
                 doc.getElementById("albumImage").src = (request && request.image) ? request.image : "http://www.pandora.com/img/no_album_art.png";    
@@ -93,6 +92,13 @@ function notify(request){
                     chrome.tabs.sendMessage(tab.id, action, function(status) {
                         callback(status, tab);
                     });
+                });
+            };
+
+            doc.defaultView.onbeforeunload = function() {
+                console.log("unloading");
+                sendMessage("getTrackInfoUpdate", function(request, tab) {
+                    setTimeout(function(){notify(request);},10);
                 });
             };
 
@@ -136,6 +142,13 @@ function notify(request){
                     }
                 });
             };
+            doc.getElementById("tiredButton").onclick = function() {
+                sendMessage("tiredOfSong", function(status) {
+                    if (status === "ok") {
+                        console.log("tired of song request success!");
+                    }
+                });
+            };
             doc.getElementById("track").onclick = function() {
                 sendMessage("seeSong", function(status, tab) {
                     if (status === "ok") {
@@ -159,12 +172,19 @@ function notify(request){
                     showTab(tab);
                 });
             };
-            $(doc).find("#menu > div > a").click(function() {
+            $(doc).find("#menu > .stations a").click(function() {
                 sendMessage("changeStation-" + $(this).attr("value"), function(status) {
+                    if (status === "ok") {
+                        console.log("change station request success!");
+                    }
                 });
             });
-            $(doc).find("#menu > div > input").change(function() {
+            $(doc).find("#menu > .stations input").change(function() {
+                console.log("requesting Add/Drop")
                 sendMessage("addDropShuffleStation-" + $(this).parent().find("a").attr("value"), function(status) {
+                    if (status === "ok") {
+                        console.log("add/drop station request success!");
+                    }
                 });
             });
 
@@ -173,6 +193,7 @@ function notify(request){
 
             //create window
             if(playerWindow){
+
                 if (showNormalInitialized && !showNormal && !playerWindow.alwaysOnTop){
                     localStorage.showNormal = false;
                     localStorage.showNormalInitialized = false;
@@ -357,6 +378,16 @@ chrome.runtime.onMessage.addListener(function(request, sender, pauseFunc) {
 
     if (request && request.action === 'notify') {
         notify(request);
+    }else if (request && request.action === 'close'){
+        chrome.tabs.query({}, function(tabs) {
+            console.log(tabs);
+                for (var tInd in tabs) {
+                    if (tabs[tInd].url.indexOf("popout.html") > -1) {
+                        console.log(tabs[tInd]);
+                        chrome.windows.remove(tabs[tInd].windowId, function () {});
+                    }
+                }
+            });
     }
 });
 
@@ -422,3 +453,16 @@ chrome.runtime.onInstalled.addListener(function(details) {
         });
     }
 });
+
+// chrome.webRequest.onHeadersReceived.addListener(function(n) {
+//         if (n.url.indexOf("audio-") > -1){
+//             console.log(n.url);
+//         }        
+//     }, {
+//         urls: ["*://*.pandora.com/*"],
+//         types: ["other"]
+//     }, []);
+//
+//"persistent": true
+//
+//"webRequest"

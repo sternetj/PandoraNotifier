@@ -72,6 +72,26 @@ function init() {
             sendMessage(function() {});
         }, 200);
     });
+    $( window ).bind("beforeunload", function() { 
+        chrome.runtime.sendMessage({action: 'close'}, function(){});
+    });
+
+    var actualCode = ['function snoozeFirstSlide(){',
+                        ' $($(".slide")[1]).mouseover();',
+                        ' setTimeout(function() {',
+                            ' $($(".slide")[1]).find(".menuArrow").click();',
+                            ' $($("a.tiredOfSong")[1]).click();',
+                            ' $($(".slide")[1]).mouseout();',
+                        ' }, 500);',
+                    ' }',
+                    ' function addDropShuffleStation(index){',
+                        ' var $span = $($(".stationName li span")[index]);',
+                    ' $span.mousedown().mouseup().click().change();',
+                    ' }'].join('\n');
+
+    var script = document.createElement('script');
+    script.textContent = actualCode;
+    (document.head||document.documentElement).appendChild(script);
 }
 
 
@@ -97,6 +117,25 @@ function checkForSongChange() {
 
         var track = trackInfo.name;
         var artist = trackInfo.artist;
+
+        // (function titleScroller(text) {
+        //     text = text.trim();
+        //     document.title = text;
+        //     function titleScrollerHelper(text2){
+        //         if (text2.length == 0){
+        //             document.title = text;
+        //             return;
+        //         }
+        //         document.title = text2;
+        //         //console.log(text);
+        //         setTimeout(function () {
+        //             titleScrollerHelper(text2.substr(1));
+        //         }, 450);
+        //     }
+        //     setInterval(function (){
+        //         titleScrollerHelper(text);
+        //     }, 450*(text.length*3));
+        // }(track + " by " + artist));
 
         window.document.title = track + " by " + artist;
 
@@ -210,6 +249,8 @@ chrome.runtime.onMessage.addListener(function(action, _, sendResponse) {
         sendResponse("ok");
     } else if (action === "getTrackInfo"){
         sendResponse(getTrackInfo(true));
+    }else if (action === "getTrackInfoUpdate"){
+        sendResponse(getTrackInfo());
     } else if (action.split('-')[0] === "changeStation") {
         var index = parseInt(action.split('-')[1]);
         if (index >= 0) {
@@ -230,12 +271,30 @@ chrome.runtime.onMessage.addListener(function(action, _, sendResponse) {
             var script = document.createElement('script');
             script.textContent = actualCode;
             (document.head||document.documentElement).appendChild(script);
-            script.parentNode.removeChild(script);
+            setTimeout(function(){script.parentNode.removeChild(script);},500);
 
             setTimeout(function() {
                 sendMessage(function() {});
             }, 800);
         }
+        sendResponse("ok");
+    } else if (action === "tiredOfSong"){
+        var actualCode = ['$($(".slide")[1]).mouseover();',
+                            ' setTimeout(function() {',
+                                ' $($(".slide")[1]).find(".menuArrow").click();',
+                                ' $($("a.tiredOfSong")[1]).click();',
+                                ' $($(".slide")[1]).mouseout();',
+                            ' }, 500);'].join('\n');
+
+        var script = document.createElement('script');
+        script.textContent = actualCode;
+        (document.head||document.documentElement).appendChild(script);
+        setTimeout(function(){script.parentNode.removeChild(script);},500);
+        // $($(".slide")[1]).mouseover();
+        // $($(".slide")[1]).find(".menuArrow").click();
+        // $($("a.tiredOfSong")[1]).click();
+        // $($(".slide")[1]).mouseout();
+        
         sendResponse("ok");
     } else {
         sendResponse("error: no action - " + action);

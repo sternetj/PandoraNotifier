@@ -18,11 +18,6 @@
 <img id="albumImage" src=""></img>
 <!-- <input type="button" value="switch" id="switchMe"></input> -->
 <div id="topBar">
-	<div id="songInfo">
-		<span><a id="track">Title</a></span>
-		<span>by <a id="artist">Artist</a></span>
-		<span>on <a id="album">Album</a></span>
-	</div>
 	<div id="playerControl">
 		<svg viewBox="0 0 32 32" id="showPandora">
 			<use xlink:href="#showMainPlayer"></use>
@@ -31,6 +26,11 @@
 			<use xlink:href="#showOptions"></use>
 		</svg>
 	</div>
+	<p id="songInfo">
+		<span><a id="track">Title</a></span>
+		<span>by <a id="artist">Artist</a></span>
+		<span>on <a id="album">Album</a></span>
+	</p>	
 </div>
 <div id="playbackControl" style="display: block;">
 	<div id="buttons">
@@ -39,6 +39,7 @@
 		<div id="playButton" class="hidden"><a></a></div>
 		<div id="pauseButton"><a></a></div>
 		<div id="skipButton"><a></a></div>
+		<div id="tiredButton" title="I'm tired of this track"><a></a></div>
 	</div>
 	<div id="progress">
 		<div id="remainingTime" class="time">-0:00</div>

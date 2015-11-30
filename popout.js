@@ -55,7 +55,7 @@ $(document).ready(function(){
 		});
 	});
 
-	$("#skipButton, #dislikeButton, #pauseButton").mouseup(function () {
+	$("#skipButton, #dislikeButton, #pauseButton, #tiredButton").mouseup(function () {
 		skipping = true;
 	});
 
