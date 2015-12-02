@@ -273,6 +273,23 @@ function notify(request){
             }
 
             doc.getElementById("dislikeButton").classList.remove("dislike");
+
+            if(request.isInAd){
+                ($(doc.getElementById("songInfo"))).hide();
+                ($(doc.getElementById("likeButton"))).unbind( "click" );
+                ($(doc.getElementById("dislikeButton"))).unbind( "click" );
+                ($(doc.getElementById("tiredButton"))).unbind( "click" );
+
+                doc.querySelector("#likeButton > a").classList.add("disabled");
+                doc.querySelector("#dislikeButton > a").classList.add("disabled");
+                doc.querySelector("#tiredButton > a").classList.add("disabled");
+            }else{
+                ($(doc.getElementById("songInfo"))).show();
+
+                doc.querySelector("#likeButton > a").classList.remove("disabled");
+                doc.querySelector("#dislikeButton > a").classList.remove("disabled");
+                doc.querySelector("#tiredButton > a").classList.remove("disabled");
+            }
         }
     }
 

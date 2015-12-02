@@ -89,13 +89,18 @@ $(document).ready(function(){
 		if (o.hasOwnProperty('hasRated') && !o.hasRated){
 			setTimeout(function () {
 				$("#RateMe").addClass("show");
-			},2700000); //After 45 minutes
+			},5400000); //After 90 minutes
+			//2700000--After 45 minutes
 		}
 	});
 
 	$("#sendRating").click(function (){
 		chrome.storage.sync.set({'hasRated': true});
 		parent.window.open('https://chrome.google.com/webstore/detail/pandora-mini-player/dkelbanlilodfdekbpibpegknfcajnia/reviews', '_blank');
+	});
+
+	$("#reportBug").click(function (){
+		parent.window.open('https://chrome.google.com/webstore/detail/pandora-mini-player/dkelbanlilodfdekbpibpegknfcajnia/support', '_blank');
 	});
 
 	$("#noRate, #sendRating").click(function (){

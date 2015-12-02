@@ -28,6 +28,11 @@ var timeOut = null;
 var firstTime = true;
 
 function getTrackInfo(showPlayer){
+    var newTi = new ti($(".playerBarSong")[0].text,
+        $(".playerBarArtist")[0].text,
+        $(".playerBarAlbum")[0].text,
+        $(".playerBarArt")[0].src);
+
     isPlaying = $($(".pauseButton")[0]).is(":visible");
     trackInfo.action = 'notify';
     trackInfo.showNow = false;
@@ -38,6 +43,9 @@ function getTrackInfo(showPlayer){
     trackInfo.songIsLiked = $($(".thumbUpButton")[0]).hasClass("indicator");
     trackInfo.elapsed = $(".elapsedTime")[0].textContent;
     trackInfo.remaining = $(".remainingTime")[0].textContent;
+
+    var inAd = !($($("#trackInfo .info")[0]).is(":visible"));
+    trackInfo.isInAd = inAd;
 
     //Get stations
     var stations = $(".stationListItem li div");
@@ -107,9 +115,7 @@ function checkForSongChange() {
     var toGo = parseInt(time2[0]) * -60 + parseInt(time2[1]);
 
     //http://www.pandora.com/img/no_album_art.png
-    if (!trackInfo.equals(newTi) && (trackInfo.image != newTi.image ||
-        (trackInfo.image == "http://www.pandora.com/img/no_album_art.png" && checks++ > 4)
-    )) {
+    if (trackInfo.image != newTi.image) {
         trackInfo = newTi;
         checks = 0;
 
