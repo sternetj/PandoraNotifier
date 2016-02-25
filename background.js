@@ -48,7 +48,7 @@ function getTrackInfo(showPlayer){
     trackInfo.isInAd = inAd;
 
     //Get stations
-    var stations = $(".stationListItem li div");
+    var stations = $(".stationNameText,#shuffleIcon").not(".notSelectableStation");
     var stationsObj = [];
     stations.each(function(index) {
         stationsObj.push({
@@ -115,7 +115,7 @@ function checkForSongChange() {
     var toGo = parseInt(time2[0]) * -60 + parseInt(time2[1]);
 
     //http://www.pandora.com/img/no_album_art.png
-    if (trackInfo.image != newTi.image) {
+    if (trackInfo.image != newTi.image || !trackInfo.equals(newTi)) {
         trackInfo = newTi;
         checks = 0;
 
