@@ -30,9 +30,9 @@
 		<span><a id="track">Title</a></span>
 		<span>by <a id="artist">Artist</a></span>
 		<span>on <a id="album">Album</a></span>
-	</p>	
+	</p>
 </div>
-<div id="playbackControl" style="display: block;">
+<div id="playbackControl">
 	<div id="buttons">
 		<div id="dislikeButton"><a></a></div>
 		<div id="likeButton"><a></a></div>
@@ -40,9 +40,19 @@
 		<div id="pauseButton"><a></a></div>
 		<div id="skipButton"><a></a></div>
 		<div id="tiredButton" title="I'm tired of this track"><a></a></div>
+		<div class="volumePosition">
+			<div class="volumeControl">
+				<div class="volumeBackground">
+					<div class="volumeBar"></div>
+					<div id="volumeKnob"></div>
+					<input id="volume" style="display:none" />
+				</div>
+				<div class="volumeButton"></div>
+			</div>
+		</div>
 	</div>
 	<div id="progress">
-		<div id="remainingTime" class="time">-0:00</div>
+		<div id="trackLength" class="time">0:00</div>
 		<div id="elapsedTime" class="time">0:00</div>
 		<div id="progressBar"><img id="progressMiddle" src="images/progress-middle.png" width="0" height="4" ></div>
 	</div>
@@ -64,8 +74,8 @@
 	<div>
 		<a href="#" id ="reportBug">Report a bug</a>
 	</div>
-	
-	
+
+
 </div>
 	<div id="RateMe">
 		<p>Thank you for using the Pandora Mini-Player.</p>

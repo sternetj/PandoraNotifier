@@ -1,9 +1,12 @@
-var rem = $($("#remainingTime")[0]);
+var rem = $($("#trackLength")[0]);
 var ela = $($("#elapsedTime")[0]);
 var progressBar = $($("#progressBar")[0]);
 var progressMiddle = $($("#progressMiddle")[0]);
+var volumeKnob = $($("#volumeKnob")[0]);
+var volumeBar = $($(".volumeBar")[0]);
 var isPlaying = !($($("#playButton")[0]).hasClass("hidden"));
 var skipping = false;
+var settingVolume = false;
 
 var formatTime = function(seconds) {
     return String(Math.floor(seconds / 60)) + ':' + (seconds % 60 < 10 ? '0' : '') + String(seconds % 60);
@@ -12,15 +15,13 @@ var formatTime = function(seconds) {
 var showProgress = function() {
 	var isPlaying = $($("#playButton")[0]).hasClass("hidden");
     var elapsed = parseInt(ela.text().split(":")[0]) * 60 + parseInt(ela.text().split(":")[1]);
-    var remaining = parseInt(rem.text().split(":")[0]) * -60 + parseInt(rem.text().split(":")[1]);
+    var trackLength = parseInt(rem.text().split(":")[0]) * 60 + parseInt(rem.text().split(":")[1]);
     if (isPlaying && !skipping){
-    if (remaining > 0) {
+      if (trackLength !== elapsed) {
 	        elapsed++;
-	        remaining--;
-	        rem.text('-' + formatTime(remaining));
 	        ela.text(formatTime(elapsed));
 
-	        var percentDone = elapsed / (elapsed + remaining);
+	        var percentDone = elapsed / trackLength;
 	        progressMiddle.width(progressBar.width() * percentDone);
 	    }else{
 	    	progressMiddle.width(0);
@@ -29,6 +30,10 @@ var showProgress = function() {
 	}
 
 }
+
+var setVolume = function(volume) {
+        chrome.extension.sendMessage("volume-" + volume, function (){})
+    }
 
 $(document).ready(function(){
 	showProgress();
@@ -40,6 +45,26 @@ $(document).ready(function(){
 	$("body").mouseleave(function(){
 	    $($("#playbackControl")[0]).removeClass("show");
 	});
+
+  $(window).mouseup(function(){
+    if(settingVolume){
+      settingVolume = false;
+      window.removeEventListener('mousemove', volumeKnobMove, true);
+      $(".volumePosition").toggleClass("hovered");
+    }
+  });
+
+  volumeKnob.mousedown(function(){
+    settingVolume = true;
+    $(".volumePosition").toggleClass("hovered");
+    window.addEventListener('mousemove', volumeKnobMove, true);
+  });
+
+  function volumeKnobMove(e){
+    var volumeLevel = Math.min(105, Math.max(15, ($("#playbackControl").position().top - e.clientY + 25)));
+    volumeKnob.css({ left: volumeLevel + 'px' });
+    setVolume((volumeLevel - 15) / 90);
+  };
 
 	var imageFirstLoad = true;
 	$("#albumImage").load(function() {
@@ -89,7 +114,8 @@ $(document).ready(function(){
 		if (o.hasOwnProperty('hasRated') && !o.hasRated){
 			setTimeout(function () {
 				$("#RateMe").addClass("show");
-			},5400000); //After 90 minutes
+			},10800000); //After 3 hours
+      //5400000--After 90 minutes
 			//2700000--After 45 minutes
 		}
 	});
@@ -105,6 +131,5 @@ $(document).ready(function(){
 
 	$("#noRate, #sendRating").click(function (){
 		$("#RateMe").removeClass("show");
-	});	
+	});
 });
-

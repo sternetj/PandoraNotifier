@@ -7,11 +7,12 @@ body {
     font-family: HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif;
     margin: 0;
     overflow: hidden;
+    -webkit-user-select: none;
 }
 #body {
     background-color: #202638;
     /*background-color: #FFF;*/
-    
+
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -25,6 +26,59 @@ input[type="checkbox"] {
     -moz-transform: scale(1.25);
     transform: scale(1.25);
 }
+
+.volumePosition {
+    width: 19px;
+    height: 15px;
+    float: left;
+    margin-top: 6px;
+}
+.volumeControl {
+    position: absolute;
+    height: 146px;
+    width: 29px;
+    margin-left: -3px;
+    margin-top: -3px;
+}
+.volumeBackground {
+    display: none;
+    width: 146px;
+    height: 29px;
+    -webkit-transform: translate(-55px, -55px) rotate(270deg);
+    transform: translate(-55px, -55px) rotate(270deg);
+    background: url('http://www.pandora.com/img/player-controls/volume_bg.png') no-repeat;
+}
+.volumePosition:hover .volumeBackground,
+.volumePosition.hovered .volumeBackground {
+  display: block;
+}
+.volumeBar {
+    position: absolute;
+    width: 127px;
+    height: 3px;
+    left: 20px;
+    top: 13px;
+    background: url('http://www.pandora.com/img/player-controls/volume_bar_big.png') no-repeat;
+}
+#volumeKnob {
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    left: 102px;
+    top: -7px;
+    background: url('http://www.pandora.com/img/player-controls/volume_knob_big.png') no-repeat;
+    cursor: pointer;
+}
+.volumeButton {
+    position: absolute;
+    top: 10px;
+    left: 9px;
+    width: 19px;
+    height: 15px;
+    background: url('http://www.pandora.com/img/player-controls/volume_icon.png') no-repeat;
+    cursor: pointer;
+}
+
 #playbackControl {
     background-color: #465c7d;
     position: absolute;
@@ -55,7 +109,7 @@ input[type="checkbox"] {
 }
 #songInfo {
     text-shadow:
-     -0.5px -0.5px 0 #000,  
+     -0.5px -0.5px 0 #000,
       0.5px -0.5px 0 #000,
       -0.5px 1px 0 #000,
        0.5px 1px 0 #000;
@@ -79,47 +133,47 @@ input[type="checkbox"] {
 #likeButton,
 #dislikeButton,
 #tiredButton {
-    margin: 6px 8px 0 8px;
+    margin: 6px 6px 0 6px;
     float: left;
 }
 #playButton > a {
-    background: url('images/btn_play.png') no-repeat center right;
-    width: 36px;
-    height: 38px;
+    background: url('images/btn_play.png') no-repeat top left;
+    width: 26px;
+    height: 36px;
 }
 #pauseButton > a {
-    background: url('images/btn_pause.png') no-repeat center right;
-    width: 36px;
-    height: 38px;
+    background: url('images/btn_pause.png') no-repeat top left;
+    width: 26px;
+    height: 36px;
 }
 #skipButton > a {
     background: url('images/btn_skip.png') no-repeat top left;
-    width: 36px;
-    height: 38px;
+    width: 28px;
+    height: 36px;
 }
 #tiredButton > a {
     background: url('images/btn_tired.png') no-repeat top left;
     width: 24px;
-    height: 38px;
+    height: 36px;
 }
 #likeButton > a {
     background: url('images/btn_up.png') no-repeat top left;
-    width: 36px;
+    width: 23px;
     height: 38px;
 }
 #likeButton.liked > a {
     background: url('images/btn_up_indicator.png') no-repeat top left;
-    width: 36px;
+    width: 23px;
     height: 38px;
 }
 #dislikeButton > a {
     background: url('images/btn_down.png') no-repeat top left;
-    width: 36px;
+    width: 22px;
     height: 38px;
 }
 #dislikeButton.dislike > a {
     background: url('images/btn_down_indicator.png') no-repeat top left;
-    width: 36px;
+    width: 22px;
     height: 38px;
 }
 #buttons {
@@ -127,11 +181,12 @@ input[type="checkbox"] {
     text-align: center;
     float: middle;
     height: 43px;
-    width: 248px;
+    width: 202px;
+    margin-bottom: 6px;
 }
 #buttons a.disabled{
     -webkit-mask-image: -webkit-gradient(linear, left top, right bottom,
-        color-stop(0.00, rgba(0, 0, 0, 0.5)), 
+        color-stop(0.00, rgba(0, 0, 0, 0.5)),
         color-stop(1.00, rgba(0, 0, 0, 0.5)));
 }
 #progressBar {
@@ -156,7 +211,7 @@ input[type="checkbox"] {
     font-size: 12px;
     color: #d1dbea;
 }
-#remainingTime {
+#trackLength {
     float: right;
     text-align: left;
     padding-left: 3px;
@@ -180,9 +235,6 @@ input[type="checkbox"] {
 #playbackControl.show {
     transform: translateY(0px);
     opacity: 1;
-}
-#buttons {
-    margin-bottom: 4px;
 }
 #albumImage {
     opacity: 0;
@@ -233,7 +285,7 @@ svg:hover {
     padding-bottom: 25px;
     right: 30px;
     top: 40px;
-    overflow-y: auto; 
+    overflow-y: auto;
     /*overflow: hidden;
     white-space: nowrap;*/
     display: none;
