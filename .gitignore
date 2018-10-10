@@ -1,0 +1,41 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+/dist
+/tmp
+
+# dependencies
+/node_modules
+/bower_components
+
+# IDEs and editors
+/.idea
+/.vscode
+/*.iml
+.project
+.classpath
+*.launch
+.settings/
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage/*
+/libpeerconnection.log
+npm-debug.log
+testem.log
+/typings
+*.log
+
+# e2e
+/automated-tests/bin/*
+
+#System Files
+.DS_Store
+Thumbs.db
+
+#environment
+.env
+
+# pre-commit config file
+.pre-commit-config.yaml
