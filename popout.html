@@ -1,92 +1,91 @@
 <html>
-	<head>
-		<title>&lrm;</title>
-		<link rel="icon" href="images/blank.ico">
-		<link rel="stylesheet" type="text/css" href="style.css">
-	</head>
-	<body id="body">
-		<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display: none;">
-			<defs>
-			<g id="showMainPlayer">
-			<path d="M19 4H5c-1.11 0-2 .9-2 2v12c0 1.1.89 2 2 2h4v-2H5V8h14v10h-4v2h4c1.1 0 2-.9 2-2V6c0-1.1-.89-2-2-2zm-7 6l-4 4h3v6h2v-6h3l-4-4z"></path>
-		</g>
-		<g id="showOptions">
-		<path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
-	</g>
-	</defs>
-</svg>
-<img id="albumImage" src=""></img>
-<!-- <input type="button" value="switch" id="switchMe"></input> -->
-<div id="topBar">
-	<div id="playerControl">
-		<svg viewBox="0 0 32 32" id="showPandora">
-			<use xlink:href="#showMainPlayer"></use>
-		</svg>
-		<svg viewBox="0 0 32 32" id="showOptionsMenu">
-			<use xlink:href="#showOptions"></use>
-		</svg>
-	</div>
-	<p id="songInfo">
-		<span><a id="track">Title</a></span>
-		<span>by <a id="artist">Artist</a></span>
-		<span>on <a id="album">Album</a></span>
-	</p>
-</div>
-<div id="playbackControl">
-	<div id="buttons">
-		<div id="dislikeButton"><a></a></div>
-		<div id="likeButton"><a></a></div>
-		<div id="playButton" class="hidden"><a></a></div>
-		<div id="pauseButton"><a></a></div>
-		<div id="skipButton"><a></a></div>
-		<div id="tiredButton" title="I'm tired of this track"><a></a></div>
-		<div class="volumePosition">
-			<div class="volumeControl">
-				<div class="volumeBackground">
-					<div class="volumeBar"></div>
-					<div id="volumeKnob"></div>
-					<input id="volume" style="display:none" />
-				</div>
-				<div class="volumeButton"></div>
-			</div>
-		</div>
-	</div>
-	<div id="progress">
-		<div id="trackLength" class="time">0:00</div>
-		<div id="elapsedTime" class="time">0:00</div>
-		<div id="progressBar"><img id="progressMiddle" src="images/progress-middle.png" width="0" height="4" ></div>
-	</div>
-</div>
-<!-- 	<div id="menu">
+
+<head>
+  <title>&lrm;</title>
+  <link rel="icon" href="images/blank.ico">
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body id="body">
+  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display: none;">
+    <defs>
+      <g id="showMainPlayer">
+        <path d="M19 4H5c-1.11 0-2 .9-2 2v12c0 1.1.89 2 2 2h4v-2H5V8h14v10h-4v2h4c1.1 0 2-.9 2-2V6c0-1.1-.89-2-2-2zm-7 6l-4 4h3v6h2v-6h3l-4-4z"></path>
+      </g>
+      <g id="showOptions">
+        <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+      </g>
+    </defs>
+  </svg>
+  <img id="albumImage" src=""></img>
+  <!-- <input type="button" value="switch" id="switchMe"></input> -->
+  <div id="topBar">
+    <div id="playerControl">
+      <svg viewBox="0 0 32 32" id="showPandora">
+        <use xlink:href="#showMainPlayer"></use>
+      </svg>
+      <svg viewBox="0 0 32 32" id="showOptionsMenu">
+        <use xlink:href="#showOptions"></use>
+      </svg>
+    </div>
+    <p id="songInfo">
+      <span><a id="track">Title</a></span>
+      <span>by <a id="artist">Artist</a></span>
+      <span>on <a id="album">Album</a></span>
+    </p>
+  </div>
+  <div id="playbackControl">
+    <div id="buttons">
+      <div id="dislikeButton"><a></a></div>
+      <div id="likeButton"><a></a></div>
+      <div id="playButton" class="hidden"><a></a></div>
+      <div id="pauseButton"><a></a></div>
+      <div id="skipButton"><a></a></div>
+      <div id="tiredButton" title="I'm tired of this track"><a></a></div>
+      <div class="volumePosition">
+        <div class="volumeControl">
+          <div class="volumeBackground">
+            <div class="volumeBar"></div>
+            <div id="volumeKnob"></div>
+            <input id="volume" style="display:none" />
+          </div>
+          <div class="volumeButton"></div>
+        </div>
+      </div>
+    </div>
+    <div id="progress">
+      <div id="trackLength" class="time">0:00</div>
+      <div id="elapsedTime" class="time">0:00</div>
+      <div id="progressBar"><img id="progressMiddle" src="images/progress-middle.png" width="0" height="4"></div>
+    </div>
+  </div>
+  <!-- 	<div id="menu">
 		<input type="checkbox" value="onTop" id="showOnTop" />
 		Always on top
 </div> -->
-<div id="menu">
-	<div>
-		To make the mini-player always stay on top<br /><a href="#" id ="enablePanels">Enable Chrome Panels</a><br />then restart your browser</div>
-	<hr/>
-	<div class="stations">
-		<div class="selected"><a>Shuffle</a></div>
-		<div><input type="checkbox"><a>Station</a></div>
-		<div class="playing"><input type="checkbox" checked><a>Station</a></div>
-	</div>
-	<hr/>
-	<div>
-		<a href="#" id ="reportBug">Report a bug</a>
-	</div>
+  <div id="menu">
+    <div>
+      To make the mini-player always stay on top<br />
+      On Windows: <a href="#" id="enablePanels">Always On Top Guide</a><br />
+    </div>
+    <hr />
+    <div>
+      <a href="#" id="reportBug">Report a bug</a>
+    </div>
 
 
-</div>
-	<div id="RateMe">
-		<p>Thank you for using the Pandora Mini-Player.</p>
-		<p>Please consider rating this extension in the Chrome Webstore</p>
-		<div class="options">
-			<input type="button" value="Rate" id="sendRating"/>
-			<input type="button" value="No Thanks" id="noRate"/>
-		</div>
-	</div>
-	<script type="text/javascript" src="jquery.min.js"></script>
-	<script type="text/javascript" src="popout.js"></script>
-	<script type="text/javascript" src="gAnalytics.js"></script>
+  </div>
+  <div id="RateMe">
+    <p>Thank you for using the Pandora Mini-Player.</p>
+    <p>Please consider rating this extension in the Chrome Webstore</p>
+    <div class="options">
+      <input type="button" value="Rate" id="sendRating" />
+      <input type="button" value="No Thanks" id="noRate" />
+    </div>
+  </div>
+  <script type="text/javascript" src="jquery.min.js"></script>
+  <script type="text/javascript" src="popout.js"></script>
+  <script type="text/javascript" src="gAnalytics.js"></script>
 </body>
+
 </html>

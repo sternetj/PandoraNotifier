@@ -1,131 +1,149 @@
 @font-face {
-    font-family: HelveticaNeue;
-    src: url(fonts/HelveticaNeue-Medium.ttf);
+  font-family: HelveticaNeue;
+  src: url(fonts/HelveticaNeue-Medium.ttf);
 }
 body {
-    color: #eee;
-    font-family: HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    margin: 0;
-    overflow: hidden;
-    -webkit-user-select: none;
+  color: #eee;
+  font-family: HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 0;
+  overflow: hidden;
+  -webkit-user-select: none;
 }
 #body {
-    background-color: #202638;
-    /*background-color: #FFF;*/
+  background-color: #202638;
+  /*background-color: #FFF;*/
 
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 a {
-    cursor: pointer;
+  cursor: pointer;
 }
 input[type="checkbox"] {
-    -webkit-transform: scale(1.25);
-    -moz-transform: scale(1.25);
-    transform: scale(1.25);
+  -webkit-transform: scale(1.25);
+  -moz-transform: scale(1.25);
+  transform: scale(1.25);
 }
 
 .volumePosition {
-    width: 19px;
-    height: 15px;
-    float: left;
-    margin-top: 6px;
+  width: 19px;
+  height: 15px;
+  float: left;
+  margin-top: 6px;
 }
 .volumeControl {
-    position: absolute;
-    height: 146px;
-    width: 29px;
-    margin-left: -3px;
-    margin-top: -3px;
+  position: absolute;
+  height: 146px;
+  width: 29px;
+  margin-left: -3px;
+  margin-top: -3px;
 }
 .volumeBackground {
-    display: none;
-    width: 146px;
-    height: 29px;
-    -webkit-transform: translate(-55px, -55px) rotate(270deg);
-    transform: translate(-55px, -55px) rotate(270deg);
-    background: url('http://www.pandora.com/img/player-controls/volume_bg.png') no-repeat;
+  display: none;
+  width: 146px;
+  height: 29px;
+  -webkit-transform: translate(-55px, -55px) rotate(270deg);
+  transform: translate(-55px, -55px) rotate(270deg);
+  background: url("http://www.pandora.com/img/player-controls/volume_bg.png")
+    no-repeat;
 }
 .volumePosition:hover .volumeBackground,
 .volumePosition.hovered .volumeBackground {
   display: block;
 }
 .volumeBar {
-    position: absolute;
-    width: 127px;
-    height: 3px;
-    left: 20px;
-    top: 13px;
-    background: url('http://www.pandora.com/img/player-controls/volume_bar_big.png') no-repeat;
+  position: absolute;
+  width: 127px;
+  height: 3px;
+  left: 20px;
+  top: 13px;
+  background: url("http://www.pandora.com/img/player-controls/volume_bar_big.png")
+    no-repeat;
 }
 #volumeKnob {
-    position: absolute;
-    width: 45px;
-    height: 45px;
-    left: 102px;
-    top: -7px;
-    background: url('http://www.pandora.com/img/player-controls/volume_knob_big.png') no-repeat;
-    cursor: pointer;
+  position: absolute;
+  width: 45px;
+  height: 45px;
+  left: 102px;
+  top: -7px;
+  background: url("http://www.pandora.com/img/player-controls/volume_knob_big.png")
+    no-repeat;
+  cursor: pointer;
 }
 .volumeButton {
-    position: absolute;
-    top: 10px;
-    left: 9px;
-    width: 19px;
-    height: 15px;
-    background: url('http://www.pandora.com/img/player-controls/volume_icon.png') no-repeat;
-    cursor: pointer;
+  position: absolute;
+  top: 10px;
+  left: 9px;
+  width: 19px;
+  height: 15px;
+  background: url("http://www.pandora.com/img/player-controls/volume_icon.png")
+    no-repeat;
+  cursor: pointer;
 }
 
 #playbackControl {
-    background-color: #465c7d;
-    position: absolute;
-    bottom: 0;
-    display: block;
-    padding-top: 2px;
-    vertical-align: center;
-    text-align: center;
-    width: -webkit-calc(100% - 20px);
-    margin: 8px 10px;
+  background-color: #224099;
+  position: absolute;
+  bottom: 0;
+  display: block;
+  padding-top: 2px;
+  vertical-align: center;
+  text-align: center;
+  width: -webkit-calc(100% - 20px);
+  margin: 8px 10px;
 }
 #playbackControl a {
-    display: block;
-    height: 38px;
-    width: 38px;
+  display: block;
+  height: 38px;
+  width: 38px;
 }
 #topBar {
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(0, 0, 0, 0.35)), color-stop(70%, rgba(0, 0, 0, 0.25)), color-stop(100%, rgba(0, 0, 0, 0)));
-    background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.25) 70%, rgba(0, 0, 0, 0) 100%);
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.25) 70%, rgba(0, 0, 0, 0) 100%);
-    position: absolute;
-    left: 0;
-    right: 0;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-bottom: 10%;
-    color: #EEE;
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0%, rgba(0, 0, 0, 0.35)),
+    color-stop(70%, rgba(0, 0, 0, 0.25)),
+    color-stop(100%, rgba(0, 0, 0, 0))
+  );
+  background: -webkit-linear-gradient(
+    top,
+    rgba(0, 0, 0, 0.35) 0%,
+    rgba(0, 0, 0, 0.25) 70%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.35) 0%,
+    rgba(0, 0, 0, 0.25) 70%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 10%;
+  color: #eee;
 }
 #songInfo {
-    text-shadow:
-     -0.5px -0.5px 0 #000,
-      0.5px -0.5px 0 #000,
-      -0.5px 1px 0 #000,
-       0.5px 1px 0 #000;
+  text-shadow: -0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000, -0.5px 1px 0 #000,
+    0.5px 1px 0 #000;
 }
 #track {
-    font-size: 1.4em;
+  font-size: 1.4em;
 }
 #songInfo span {
-    display: block;
+  display: block;
 }
 #songInfo a {
-    color: inherit;
-    text-decoration: none;
+  color: inherit;
+  text-decoration: none;
 }
 #songInfo a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 #playButton,
 #pauseButton,
@@ -133,222 +151,198 @@ input[type="checkbox"] {
 #likeButton,
 #dislikeButton,
 #tiredButton {
-    margin: 6px 6px 0 6px;
-    float: left;
+  margin: 6px 6px 0 6px;
+  float: left;
 }
 #playButton > a {
-    background: url('images/btn_play.png') no-repeat top left;
-    width: 26px;
-    height: 36px;
+  background: url("images/btn_play.png") no-repeat top left;
+  width: 26px;
+  height: 36px;
 }
 #pauseButton > a {
-    background: url('images/btn_pause.png') no-repeat top left;
-    width: 26px;
-    height: 36px;
+  background: url("images/btn_pause.png") no-repeat top left;
+  width: 26px;
+  height: 36px;
 }
 #skipButton > a {
-    background: url('images/btn_skip.png') no-repeat top left;
-    width: 28px;
-    height: 36px;
+  background: url("images/btn_skip.png") no-repeat top left;
+  width: 28px;
+  height: 36px;
 }
 #tiredButton > a {
-    background: url('images/btn_tired.png') no-repeat top left;
-    width: 24px;
-    height: 36px;
+  background: url("images/btn_tired.png") no-repeat top left;
+  width: 24px;
+  height: 36px;
 }
 #likeButton > a {
-    background: url('images/btn_up.png') no-repeat top left;
-    width: 23px;
-    height: 38px;
+  background: url("images/btn_up.png") no-repeat top left;
+  width: 23px;
+  height: 38px;
 }
 #likeButton.liked > a {
-    background: url('images/btn_up_indicator.png') no-repeat top left;
-    width: 23px;
-    height: 38px;
+  background: url("images/btn_up_indicator.png") no-repeat top left;
+  width: 23px;
+  height: 38px;
 }
 #dislikeButton > a {
-    background: url('images/btn_down.png') no-repeat top left;
-    width: 22px;
-    height: 38px;
+  background: url("images/btn_down.png") no-repeat top left;
+  width: 22px;
+  height: 38px;
 }
 #dislikeButton.dislike > a {
-    background: url('images/btn_down_indicator.png') no-repeat top left;
-    width: 22px;
-    height: 38px;
+  background: url("images/btn_down_indicator.png") no-repeat top left;
+  width: 22px;
+  height: 38px;
 }
 #buttons {
-    margin: 0 auto;
-    text-align: center;
-    float: middle;
-    height: 43px;
-    width: 202px;
-    margin-bottom: 6px;
+  margin: 0 auto;
+  text-align: center;
+  float: middle;
+  height: 43px;
+  width: 202px;
+  margin-bottom: 6px;
 }
-#buttons a.disabled{
-    -webkit-mask-image: -webkit-gradient(linear, left top, right bottom,
-        color-stop(0.00, rgba(0, 0, 0, 0.5)),
-        color-stop(1.00, rgba(0, 0, 0, 0.5)));
+#buttons.disabled #likeButton a,
+#buttons.disabled #dislikeButton a,
+#buttons.disabled #tiredButton a,
+#buttons.disabled #skipButton a {
+  -webkit-mask-image: -webkit-gradient(
+    linear,
+    left top,
+    right bottom,
+    color-stop(0, rgba(0, 0, 0, 0.5)),
+    color-stop(1, rgba(0, 0, 0, 0.5))
+  );
 }
 #progressBar {
-    height: 4px;
-    overflow: hidden;
-    background-color: #0f304f;
-    text-align: left;
-    vertical-align: middle;
-    border-radius: 2px;
+  height: 4px;
+  overflow: hidden;
+  background-color: #0f304f;
+  text-align: left;
+  vertical-align: middle;
+  border-radius: 2px;
 }
 #progress {
-    width: 100%;
-    clear: both;
-    margin-left: 3;
-    margin-right: auto;
+  width: 100%;
+  clear: both;
+  margin-left: 3;
+  margin-right: auto;
 }
 .time {
-    position: relative;
-    width: 35px;
-    vertical-align: top;
-    margin-top: -6px;
-    font-size: 12px;
-    color: #d1dbea;
+  position: relative;
+  width: 35px;
+  vertical-align: top;
+  margin-top: -6px;
+  font-size: 12px;
+  color: #d1dbea;
 }
 #trackLength {
-    float: right;
-    text-align: left;
-    padding-left: 3px;
-    width: 40px;
-    margin-right: 10px;
+  float: right;
+  text-align: left;
+  padding-left: 3px;
+  width: 40px;
+  margin-right: 10px;
 }
 #elapsedTime {
-    float: left;
-    width: 40px;
-    padding-right: 3px;
-    text-align: right;
+  float: left;
+  width: 40px;
+  padding-right: 3px;
+  text-align: right;
 }
 .hidden {
-    display: none;
+  display: none;
 }
 #playbackControl {
-    transition: all 0.75s ease;
-    transform: translateY(65px);
-    opacity: 0;
+  transition: all 0.75s ease;
+  transform: translateY(65px);
+  opacity: 0;
 }
 #playbackControl.show {
-    transform: translateY(0px);
-    opacity: 1;
+  transform: translateY(0px);
+  opacity: 1;
 }
 #albumImage {
-    opacity: 0;
-    position: absolute;
-    object-fit: cover;
-    width: 100vw;
+  opacity: 0;
+  position: absolute;
+  object-fit: cover;
+  width: 100vmax;
+  height: 100vmax;
 }
 #albumImage.animate {
-    animation: circleReveal 1.5s forwards;
+  animation: circleReveal 1.5s forwards;
 }
 @keyframes circleReveal {
-    0% {
-        opacity: 1;
-        -webkit-clip-path: circle(0px at center);
-    }
-    100% {
-        opacity: 1;
-        -webkit-clip-path: circle(100% at center);
-    }
+  0% {
+    opacity: 1;
+    -webkit-clip-path: circle(0px at center);
+  }
+  100% {
+    opacity: 1;
+    -webkit-clip-path: circle(100vmax at center);
+  }
 }
 #playerControl {
-    float: right;
-    display: inline-block;
-    margin-right: -12px;
-    margin-left: 25px;
-    padding-top: 12px;
-    height: 1px;
+  float: right;
+  display: inline-block;
+  margin-right: -12px;
+  margin-left: 25px;
+  padding-top: 12px;
+  height: 1px;
 }
 svg {
-    fill: rgba(255, 255, 255, 0.45);
-    height: 32px;
-    width: 32px;
-    cursor: pointer;
+  fill: rgba(255, 255, 255, 0.45);
+  height: 32px;
+  width: 32px;
+  cursor: pointer;
 }
 svg:hover {
-    fill: white;
+  fill: white;
 }
 #menu {
-    position: absolute;
-    z-index: 2;
-    background: white;
-    border-radius: 2px;
-    font-size: 14px;
-    color: black;
-    padding-top: 20px;
-    padding-left: 10px;
-    padding-right: 20px;
-    padding-bottom: 25px;
-    right: 30px;
-    top: 40px;
-    overflow-y: auto;
-    /*overflow: hidden;
+  position: absolute;
+  z-index: 2;
+  background: white;
+  border-radius: 2px;
+  font-size: 14px;
+  color: black;
+  padding-top: 20px;
+  padding-left: 10px;
+  padding-right: 20px;
+  padding-bottom: 25px;
+  right: 30px;
+  top: 40px;
+  overflow-y: auto;
+  /*overflow: hidden;
     white-space: nowrap;*/
-    display: none;
-    max-height: calc(100% - 120px);
-    max-width: calc(100% - 90px)
-}
-.stations div a {
-    display: inline-block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 100%;
+  display: none;
+  max-height: calc(100% - 120px);
+  max-width: calc(100% - 90px);
 }
 
-.stations > div:first-of-type > a
-{
-    background-image: url('images/shuffle-icon.png');
-    background-repeat: no-repeat;
-    padding-left: 20px;
-    background-position: left center;
-}
-.stations > div {
-    padding: 3px 0px;
-    display: flex;
-}
-.stations > div:hover {
-    background-color: #c5dbf7;
-}
-.stations > div:first-of-type > a:hover
-{
-    background-image: url('images/shuffle-icon-hover.png');
-}
-.stations > div.selected {
-    background-color: #eadd72 !Important;
-    padding: 5px;
-}
-.stations > div.playing {
-    color: #cc7800;
-}
 #RateMe {
-    width: 100%;
-    height: 100%;
-    background: black;
-    color: #FFF;
-    z-index: 4;
-    opacity: 0.85;
-    position: absolute;
-    padding: 20px;
-    font-size: 16px;
+  width: 100%;
+  height: 100%;
+  background: black;
+  color: #fff;
+  z-index: 4;
+  opacity: 0.85;
+  position: absolute;
+  padding: 20px;
+  font-size: 16px;
 }
 #RateMe > .options {
-    float: right;
-    opacity: 1;
+  float: right;
+  opacity: 1;
 }
 #RateMe > * {
-    padding-right: 40px;
+  padding-right: 40px;
 }
 #RateMe {
-    transition: all 0.75s ease;
-    transform: translateY(100%);
-    opacity: 0;
+  transition: all 0.75s ease;
+  transform: translateY(100%);
+  opacity: 0;
 }
 #RateMe.show {
-    transform: translateY(0px);
-    opacity: 0.85;
+  transform: translateY(0px);
+  opacity: 0.85;
 }

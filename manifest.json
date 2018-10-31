@@ -1,29 +1,33 @@
 {
   "name": "Pandora Mini-Player",
-  "version": "1.8.0",
+  "version": "2.0.1",
   "description": "Adds a mini-player for Pandora",
   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
   "icons": {
     "128": "Logo.png"
   },
   "permissions": [
-    "notifications", "activeTab", "*://*.pandora.com/*", "tabs", "declarativeContent", "storage"
+    "notifications",
+    "activeTab",
+    "*://*.pandora.com/*",
+    "tabs",
+    "declarativeContent",
+    "storage"
   ],
   "manifest_version": 2,
-  "web_accessible_resources": [
-    "pandora2.png", "popout.html"
+  "web_accessible_resources": ["pandora2.png", "popout.html"],
+  "content_scripts": [
+    {
+      "matches": ["*://*.pandora.com/*"],
+      "js": ["jquery.min.js", "background.js"]
+    }
   ],
-  "content_scripts": [{
-    "matches": ["*://*.pandora.com/*"],
-    "js": ["jquery.min.js", "background.js"]
-  }],
   "background": {
     "scripts": ["jquery.min.js", "player.js"],
     "persistent": false
   },
-  "page_action": {
-          "default_icon": "pandora2.png",
-          "default_title": "Pandora Mini-Player",
-          "default_popup": "options.html"
+  "browser_action": {
+    "default_icon": "pandora2.png",
+    "default_title": "Pandora Mini-Player"
   }
 }

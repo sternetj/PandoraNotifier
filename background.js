@@ -12,7 +12,6 @@ class TrackInfo {
     this.showNow = undefined;
     this.volume = undefined;
     this.isInAd = undefined;
-    this.stations = [];
   }
 
   equals(obj) {
@@ -24,26 +23,15 @@ class TrackInfo {
   }
 }
 
+const pageTitle = window.document.title;
 let trackInfo = new TrackInfo();
 let isPlaying = true;
 let timeout = null;
-let nt = null;
 let checks = 0;
 let timeOut = null;
 let firstTime = true;
 let volume = null;
 var $, chrome;
-
-function getQueryVariable(query, variable) {
-  return; //for now
-  var vars = query.split("&");
-  for (var i = 0; i < vars.length; i++) {
-    var pair = vars[i].split("=");
-    if (decodeURIComponent(pair[0]) == variable) {
-      return decodeURIComponent(pair[1]);
-    }
-  }
-}
 
 function getTrackName() {
   var trackElement = $(".Marquee__wrapper__content")[0];
@@ -60,15 +48,6 @@ function getTrackName() {
 }
 
 function getTrackInfo(showPlayer) {
-  var newTi = new TrackInfo(
-    getTrackName(),
-    $(".nowPlayingTopInfo__current__artistName")[0].text,
-    $(".nowPlayingTopInfo__current__albumName ")[0].text,
-    $(".nowPlayingTopInfo__artContainer__art")[0]
-      .style.backgroundImage.replace('url("', "")
-      .replace('")', "")
-  );
-
   isPlaying = $($("[data-qa='pause_button']")[0]).is(":visible");
   trackInfo.action = "notify";
   trackInfo.showNow = false;
@@ -76,9 +55,8 @@ function getTrackInfo(showPlayer) {
     trackInfo.showNow = true;
   }
   trackInfo.isPlaying = isPlaying;
-  trackInfo.songIsLiked = $($("[data-qa='thumbs_up_button']")[0]).hasClass(
-    "indicator"
-  );
+  trackInfo.songIsLiked =
+    $(".ThumbUpButton")[0].getAttribute("aria-checked") === "true";
   trackInfo.elapsed = $("[data-qa='elapsed_time']")[0].textContent;
   trackInfo.remaining = $("[data-qa='remaining_time']")[0].textContent;
 
@@ -90,21 +68,8 @@ function getTrackInfo(showPlayer) {
     }
   }
 
-  var inAd = !$($("#trackInfo .info")[0]).is(":visible");
-  trackInfo.isInAd = false; //inAd;
-
-  //Get stations TODO fix this
-  // var stations = $(".StationListItem__title").not(".notSelectableStation");
-  var stationsObj = [];
-  // stations.each(function(index) {
-  //     stationsObj.push({
-  //         name: $(this).text().trim(),
-  //         selected: $(this).parent().parent().parent().hasClass("selected") || $(this).parent().parent().parent().parent().hasClass("selected"),
-  //         checked: $(this).parent().find(".checkbox").hasClass("checked"),
-  //         playing: $(this).parent().hasClass("shuffleStationLabelCurrent")
-  //     });
-  // });
-  trackInfo.stations = stationsObj;
+  const inAd = $(".nowPlayingTopInfo__current__audioAdMessage").length;
+  trackInfo.isInAd = inAd;
 
   return trackInfo;
 }
@@ -120,7 +85,6 @@ function init() {
   trackInfo = new TrackInfo();
   isPlaying = true;
   timeout = null;
-  nt = null;
   checks = 0;
   timeOut = null;
   setInterval(checkForSongChange, 300);
@@ -137,45 +101,29 @@ function init() {
     chrome.runtime.sendMessage({ action: "close" }, function() {});
   };
 
-  var actualCode = [
-    "function snoozeFirstSlide(){",
-    ' fireEvent(document.getElementsByClassName("nowPlayingTopInfo__hitArea__topLevelMenu__sessionHistory")[0], "mouseover");',
-    " setTimeout(function() {",
-    ' document.getElementsByClassName("nowPlayingTopInfo__hitArea__topLevelMenu__more")[0].click();',
-    " document.querySelector(\"[data-qa='album_menu_tiredoftrack_button'\").click();",
-    ' fireEvent(document.getElementsByClassName("nowPlayingTopInfo__hitArea__topLevelMenu__sessionHistory")[0], "mouseout");',
-    " }, 500);",
-    " }",
-    " function addDropShuffleStation(index){",
-    ' var $span = $($(".stationName li span")[index]);',
-    " $span.mousedown().mouseup().click().change();",
-    " }",
-    " function fireEvent( element, eventName ){",
-    " if( element != null ){",
-    " if( element.fireEvent ){",
-    ' element.fireEvent( "on" + eventName );',
-    " } else {",
-    ' var evObj = document.createEvent( "Events" );',
-    " evObj.initEvent( eventName, true, false );",
-    " element.dispatchEvent( evObj );",
-    " }",
-    " }",
-    "}"
-  ].join("\n");
+  const injectedPageScript = document.createElement("script");
+  injectedPageScript.textContent = `
+  function snoozeFirstSlide() {
+    document.getElementsByClassName("nowPlayingTopInfo__hitArea__topLevelMenu__more")[0].click();
+    document.querySelector('[data-qa="album_menu_tiredoftrack_button"').click();
+  }`;
 
-  var script = document.createElement("script");
-  script.textContent = actualCode;
-  (document.head || document.documentElement).appendChild(script);
+  (document.head || document.documentElement).appendChild(injectedPageScript);
 }
 
 function checkForSongChange() {
+  let imageUrl = $(".nowPlayingTopInfo__artContainer__art")[0]
+    .style.backgroundImage.replace('url("', "")
+    .replace('")', "");
+
+  if (imageUrl.startsWith("/")) {
+    imageUrl = location.origin + imageUrl;
+  }
   var newTi = new TrackInfo(
     getTrackName(),
-    $(".nowPlayingTopInfo__current__artistName")[0].text,
-    $(".nowPlayingTopInfo__current__albumName ")[0].text,
-    $(".nowPlayingTopInfo__artContainer__art")[0]
-      .style.backgroundImage.replace('url("', "")
-      .replace('")', "")
+    ($(".nowPlayingTopInfo__current__artistName")[0] || {}).text,
+    ($(".nowPlayingTopInfo__current__albumName ")[0] || {}).text,
+    imageUrl
   );
 
   var time = $('[data-qa="elapsed_time"]')[0].textContent.split(":");
@@ -190,9 +138,6 @@ function checkForSongChange() {
 
     sendMessage();
 
-    var track = trackInfo.name;
-    var artist = trackInfo.artist;
-
     if (volume !== null) {
       var audioControls = $("audio");
       for (var i = 0; i < audioControls.length; i++) {
@@ -201,7 +146,9 @@ function checkForSongChange() {
       }
     }
 
-    window.document.title = track + " by " + artist;
+    window.document.title = trackInfo.isInAd
+      ? pageTitle
+      : `${trackInfo.name} by ${trackInfo.artist}`;
   }
 
   isPlaying = $($("[data-qa='pause_button']")[0]).is(":visible");
@@ -251,7 +198,7 @@ chrome.runtime.onMessage.addListener(function(action, _, sendResponse) {
     $("[data-qa='thumbs_up_button']").click();
     sendResponse("ok");
   } else if (action === "dislike") {
-    $("[data-qa='thumb_down_button']").click();
+    $("[data-qa='thumbs_down_button']").click();
     sendResponse("ok");
   } else if (action === "skip") {
     $("[data-qa='skip_button']").click();
@@ -278,37 +225,6 @@ chrome.runtime.onMessage.addListener(function(action, _, sendResponse) {
         if (audioControls[i].paused) continue;
         audioControls[i].volume = volume;
       }
-    }
-    sendResponse("ok");
-  } else if (action.split("-")[0] === "changeStation") {
-    var index = parseInt(action.split("-")[1]);
-    if (index >= 0) {
-      $($(".stationListItem li div")[index]).click();
-      setTimeout(function() {
-        sendMessage();
-      }, 200);
-    }
-    sendResponse("ok");
-  } else if (action.split("-")[0] === "addDropShuffleStation") {
-    var index = parseInt(action.split("-")[1]);
-    if (index > 0) {
-      index -= 1;
-
-      var actualCode = [
-        'var $span = $($(".stationName li span")[' + index + "]);",
-        " $span.mousedown().mouseup().click().change();"
-      ].join("\n");
-
-      var script = document.createElement("script");
-      script.textContent = actualCode;
-      (document.head || document.documentElement).appendChild(script);
-      setTimeout(function() {
-        script.parentNode.removeChild(script);
-      }, 500);
-
-      setTimeout(function() {
-        sendMessage();
-      }, 800);
     }
     sendResponse("ok");
   } else if (action === "tiredOfSong") {
