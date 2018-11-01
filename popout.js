@@ -131,7 +131,7 @@ $(document).ready(function() {
   });
 
   chrome.storage.sync.get(null, function(o) {
-    if (o.hasOwnProperty("hasRated") && !o.hasRated) {
+    if (!o.hasRated) {
       setTimeout(function() {
         $("#RateMe").addClass("show");
       }, 10800000); //After 3 hours
@@ -157,5 +157,9 @@ $(document).ready(function() {
 
   $("#noRate, #sendRating").click(function() {
     $("#RateMe").removeClass("show");
+  });
+
+  $("#keepListening").click(function() {
+    $("#StillListening").removeClass("show");
   });
 });

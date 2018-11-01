@@ -23,7 +23,7 @@ function showTab(tab) {
 }
 
 function notify(request) {
-  var updatePlayer = function(playerWindow) {
+  var updatePlayer = function() {
     var views = chrome.extension.getViews();
     if (views.length > 1) {
       var miniPlayerIndex = 0;
@@ -54,17 +54,11 @@ function notify(request) {
         return;
       }
 
-      var body = doc.body;
-      if (
-        doc.getElementById("albumImage").src !=
-        (request && request.image
-          ? request.image
-          : "http://www.pandora.com/img/no_album_art.png")
-      ) {
-        doc.getElementById("albumImage").src =
-          request && request.image
-            ? request.image
-            : "http://www.pandora.com/img/no_album_art.png";
+      const albumImage =
+        (request && request.image) ||
+        "http://www.pandora.com/img/no_album_art.png";
+      if (doc.getElementById("albumImage").src != albumImage) {
+        doc.getElementById("albumImage").src = albumImage;
       }
       doc.getElementById("track").innerHTML = request.name;
       doc.getElementById("artist").innerHTML = request.artist;
@@ -151,6 +145,13 @@ function notify(request) {
           showTab(tab);
         });
       };
+      doc.getElementById("keepListening").onclick = function() {
+        sendMessage("keepListening", function(status) {
+          if (status === "ok") {
+            console.log("keep listening success!");
+          }
+        });
+      };
 
       $(doc.getElementById("enablePanels")).click(function() {
         const windowsOnTopUrl = "https://www.howtogeek.com/howto/13784";
@@ -193,6 +194,12 @@ function notify(request) {
         $(doc.getElementById("songInfo")).show();
         doc.querySelector("#buttons").classList.remove("disabled");
       }
+
+      if (request.areYouStillListening) {
+        doc.querySelector("#StillListening").classList.add("show");
+      } else {
+        doc.querySelector("#StillListening").classList.remove("show");
+      }
     }
   };
 
@@ -215,7 +222,7 @@ function notify(request) {
     }
   }
 
-  var showNow = "showNow" in request && request.showNow;
+  var showNow = request.showNow;
   if (!miniPlayerExists) {
     var alwaysShow = JSON.parse(localStorage.alwaysShow);
     var firstLoad = JSON.parse(localStorage.firstLoad);
@@ -253,7 +260,7 @@ function notify(request) {
         popupWin = win;
         console.log(win);
         timeOut = setTimeout(function() {
-          updatePlayer(win);
+          updatePlayer();
         }, 500);
       }
     );
@@ -261,15 +268,11 @@ function notify(request) {
     updatePlayer();
 
     if (showNow) {
-      chrome.tabs.query({}, function(tabs) {
-        var tab = null;
-        for (var tInd in tabs) {
-          if (tabs[tInd].url.indexOf("popout.html") > -1) {
-            tab = tabs[tInd];
-            break;
-          }
+      const urlPattern = "chrome-extension://*/popout.html*";
+      chrome.tabs.query({ url: urlPattern }, function(tabs) {
+        if (tabs.length) {
+          showTab(tabs[0]);
         }
-        showTab(tab);
       });
     }
   }
