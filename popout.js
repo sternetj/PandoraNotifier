@@ -48,7 +48,10 @@ $(document).ready(function() {
   setInterval(showProgress, 1000);
 
   $("body").mouseenter(function() {
-    $($("#playbackControl")[0]).addClass("show");
+    const isMenuOpen = $("#StillListening,#RateMe").hasClass("show");
+    if (!isMenuOpen) {
+      $($("#playbackControl")[0]).addClass("show");
+    }
   });
   $("body").mouseleave(function() {
     $($("#playbackControl")[0]).removeClass("show");
@@ -133,6 +136,7 @@ $(document).ready(function() {
   chrome.storage.sync.get(null, function(o) {
     if (!o.hasRated) {
       setTimeout(function() {
+        $($("#playbackControl")[0]).removeClass("show");
         $("#RateMe").addClass("show");
       }, 10800000); //After 3 hours
       //5400000--After 90 minutes
@@ -157,9 +161,11 @@ $(document).ready(function() {
 
   $("#noRate, #sendRating").click(function() {
     $("#RateMe").removeClass("show");
+    $($("#playbackControl")[0]).addClass("show");
   });
 
   $("#keepListening").click(function() {
     $("#StillListening").removeClass("show");
+    $($("#playbackControl")[0]).addClass("show");
   });
 });

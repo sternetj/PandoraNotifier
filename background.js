@@ -1,8 +1,9 @@
 const pageTitle = window.document.title;
 var $, chrome;
 
+const defaultElement = $(document.createElement("div"))[0];
 function getSafeEl(selector) {
-  return $(selector)[0] || document.createElement("div");
+  return $(selector)[0] || defaultElement;
 }
 
 class TrackInfo {
@@ -27,14 +28,19 @@ class TrackInfo {
       .style.backgroundImage.replace('url("', "")
       .replace('")', "");
 
+    if (!imgUrl) {
+      imgUrl = getSafeEl(".ImageLoader__loaded.ImageLoader__cover").src;
+      imgUrl = imgUrl && imgUrl.replace("90W_90H", "500W_500H");
+    }
+
     if (imgUrl && imgUrl.startsWith("/")) {
       imgUrl = location.origin + imgUrl;
     }
 
     return new TrackInfo({
-      name: getSafeEl(
-        ".Marquee__wrapper__content, .Tuner__Audio__TrackDetail__title"
-      ).textContent,
+      name:
+        getSafeEl(".Marquee__wrapper__content").textContent ||
+        getSafeEl(".Tuner__Audio__TrackDetail__title").text,
       artist: getSafeEl(
         ".nowPlayingTopInfo__current__artistName, .Tuner__Audio__TrackDetail__artist"
       ).text,
@@ -75,11 +81,21 @@ function sendMessage(callback, showPlayer) {
 }
 
 let trackInfo = new TrackInfo();
+let checkLoopInterval = undefined;
+const checkLoopTime = 300;
+
+function setupCheckLoop() {
+  checkLoopInterval = setInterval(checkForSongChange, checkLoopTime);
+}
+
+function resetCheckLoop(inMs = 1000) {
+  clearInterval(checkLoopInterval);
+  setTimeout(setupCheckLoop, inMs - checkLoopTime);
+}
 
 function init() {
   trackInfo = new TrackInfo();
-  setInterval(checkForSongChange, 300);
-  setTimeout(checkForSongChange, 1000);
+  setupCheckLoop();
   $(
     "[data-qa='pause_button'], [data-qa='play_button'], [data-qa='skip_button'], [data-qa='thumbs_up_button'], [data-qa='thumb_down_button']"
   ).mouseup(function() {
@@ -152,13 +168,19 @@ waitTilLoaded();
 
 chrome.runtime.onMessage.addListener(function(action, _, sendResponse) {
   if (action === "pause") {
+    resetCheckLoop();
     $("[data-qa='pause_button']").click();
+    trackInfo.isPlaying = false;
     sendResponse("ok");
   } else if (action === "play") {
+    resetCheckLoop();
     $("[data-qa='play_button']").click();
+    trackInfo.isPlaying = true;
     sendResponse("ok");
   } else if (action === "like") {
+    resetCheckLoop();
     $("[data-qa='thumbs_up_button']").click();
+    trackInfo.songIsLiked = true;
     sendResponse("ok");
   } else if (action === "dislike") {
     $("[data-qa='thumbs_down_button']").click();
@@ -176,7 +198,9 @@ chrome.runtime.onMessage.addListener(function(action, _, sendResponse) {
     $(".nowPlayingTopInfo__current__albumName")[0].click();
     sendResponse("ok");
   } else if (action === "keepListening") {
+    resetCheckLoop();
     $(".StillListeningBody button")[0].click();
+    trackInfo.areYouStillListening = false;
     sendResponse("ok");
   } else if (action === "getTrackInfo") {
     sendResponse(TrackInfo.getLatest(true));
@@ -185,7 +209,9 @@ chrome.runtime.onMessage.addListener(function(action, _, sendResponse) {
   } else if (action.split("-")[0] === "setVolume") {
     const setVolume = +action.split("-")[1];
     if (!isNaN(setVolume)) {
+      resetCheckLoop();
       getSafeEl("audio").volume = setVolume;
+      trackInfo.volume = setVolume;
     }
     sendResponse("ok");
   } else if (action === "tiredOfSong") {
